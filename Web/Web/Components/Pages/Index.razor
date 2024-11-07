@@ -1,0 +1,133 @@
+﻿@page "/"
+    <div class="container">
+        <div class="login-form">
+            <div class="home-icon">
+                <img src="\Img\IconApp.png">
+            </div>
+            <h1>Войдите в систему</h1>
+            <div class="form-group">
+                <label for="login">Логин</label>
+                <input type="login" id="login" bind="@login"  placeholder="">
+            </div>
+            <div class="form-group">
+                <label for="password" >Пароль</label>
+                <input type="password" id="password" placeholder="">
+            </div>
+        <button class="login-button" onclick="@Autorization">Войти</button>
+            <button class="register-button">Регистрация</button>
+        </div>
+    </div>
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to bottom, #6284ff, #8366ff);
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        text-align: center;
+    }
+
+    .login-form {
+        margin-top: 30px;
+    }
+
+    .home-icon .circle {
+        width: 40px; /* Adjust the size as needed */
+        height: 40px;
+        border-radius: 50%; /* Make it a circle */
+        background-color: white; /* Set a background color */
+        overflow: hidden; /* Hide anything that overflows the circle */
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Center the image within the circle */
+    }
+
+    .home-icon img {
+        width: 50%; /* Make the image fit within the circle */
+        height: auto;
+    }
+
+    h1 {
+        font-size: 24px;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    .login-button, .register-button {
+        background-color: #5479ff;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+    }
+
+        .login-button:hover, .register-button:hover {
+            background-color: #395dff;
+        }
+
+    </style>
+    <script>
+    const loginButton = document.querySelector('.login-button');
+    const registerButton = document.querySelector('.register-button');
+
+    loginButton.addEventListener('click', () => {
+        // Проверяем, заполнены ли поля формы
+        const login = document.getElementById('login').value;
+        const password = document.getElementById('password').value;
+
+        if (login && password) {
+            // Здесь вы должны добавить свою логику проверки
+            // Например, отправку данных на сервер для аутентификации
+
+            // Вместо этого просто откроем новое окно
+            window.open('\\TasksBoard/task_index.html', '_blank');
+        } else {
+            // Выводим сообщение об ошибке, если поля не заполнены
+            alert('Пожалуйста, заполните все поля!');
+        }
+    });
+
+    registerButton.addEventListener('click', () => {
+        // Проверяем, заполнены ли поля формы
+        const login = document.getElementById('login').value;
+        const password = document.getElementById('password').value;
+        window.open('\\Registration/reg_index.html', '_blank');
+    }
+    );
+    </script>
