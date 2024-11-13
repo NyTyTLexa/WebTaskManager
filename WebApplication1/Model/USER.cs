@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Model
 {
-    public class USER
+    public class User
     {
         [Required]
         public string Id { get; set; }
@@ -13,6 +13,13 @@ namespace WebApplication1.Model
         
         public string FullName { get; set; }
         public string Email { get; set; }
+        public User(string id, string login, string password)
+        {
+            Id = id;
+            Login = login;
+            Password = password;
+        }
 
+        public User() { }
     }
 }

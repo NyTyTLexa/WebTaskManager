@@ -10,5 +10,10 @@
         public string date_start { get; set; }
         public string date_end { get; set; }
 
+        public string DeadLine { get
+            {
+                return Convert.ToDateTime(date_end).ToShortDateString();
+            } }
+
     }
 }

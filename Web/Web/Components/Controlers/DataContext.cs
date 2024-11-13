@@ -9,7 +9,7 @@ namespace Web.Components.Controlers
         public DbSet<Model.Priority> Priority { get; set; }
         public DbSet<Model.Status> Status { get; set; }
         public DbSet<Model.Task> Task { get; set; }
-        public DbSet<Model.USER> USER { get; set; }
+        public DbSet<Model.User> USER { get; set; }
         public DbSet<Model.UserandTask> UserandTask { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

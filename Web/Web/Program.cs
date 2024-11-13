@@ -1,8 +1,6 @@
 using System.Configuration;
 using Web.Client.Pages;
 using Web.Components;
-using Web.Components.Controllers;
-
 internal class Program
 {
     private static void Main(string[] args)
@@ -14,7 +12,7 @@ internal class Program
             .AddInteractiveServerComponents()
             .AddInteractiveWebAssemblyComponents();
 
-        var app = builder.Build()
+        var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

@@ -1,13 +1,34 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Components.Web
 @rendermode RenderMode.InteractiveServer
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @code
 {
     public string login{ get; set; }
     public string password{ get; set; }
+    public string Answer { get; set; }
     public async Task Autorization()
     {
-
+        var apiClient = new ApiClient("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."+
+        "eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoi"+
+        "MTIzMTIzIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFt"+
+        "ZWlkZW50aWZlZXIiOiIxMjNlNDU2Ny1lODliLTEyZDMtYTQ1Ni00MjY2NTU0NDAwMDA"+
+        "iLCJleHAiOjE3MzA5MDY3NDN9.ero6vopzxEbCz0XWeRIQ0eNOKL6q_CeKRMDApZeTAyc", "LANVER2024@");
+        JSRuntime.InvokeVoidAsync("blockInputs");
+        var result = await apiClient.AuthorizationUser(login, password);
+        if (result != null && result.Error != string.Empty)
+        {
+            Answer = "Неверные данные";
+            StateHasChanged();
+            await Task.Delay(5000); 
+            Answer = "";
+            StateHasChanged(); 
+        }
+        else
+        {
+           NavigationManager.NavigateTo($"/home/{result.Id}",true);
+        }
     }
 }
  <!DOCTYPE html>
@@ -23,21 +44,32 @@
             <div class="home-icon">
                 <img src="\Img\IconApp.png">
             </div>
+            <h2 style="color:Red">@Answer</h2>
             <h1>Войдите в систему</h1>
             <div class="form-group">
                 <label >Логин</label>
-                <input type="login" id="login" @bind="login"  placeholder="">
+                <input type="login" id="login" @bind="login" placeholder="">
             </div>
             <div class="form-group">
                 <label >Пароль</label>
                 <input type="password" id="password" @bind="password" placeholder="">
             </div>
-        <button class="login-button" @onclick="Autorization">Войти</button>
+        <button class="login-button"  @onclick="Autorization">Войти</button>
             <button class="register-button">Регистрация</button>
         </div>
     </div>
 </body>
 </html>
+<script>
+    function blockInputs() {
+        document.getElementById("login").disabled = true;
+        document.getElementById("password").disabled = true;
+        setTimeout(function () {
+            document.getElementById("login").disabled = false;
+            document.getElementById("password").disabled = false;
+        }, 5000);
+    }
+</script>
     <style>
     body {
         margin: 0;

@@ -2,7 +2,7 @@
 
 namespace Web.Model
 {
-    public class USER
+    public class User
     {
         [Required]
         public string Id { get; set; }
@@ -14,5 +14,20 @@ namespace Web.Model
         public string FullName { get; set; }
         public string Email { get; set; }
 
+        virtual public string Error { get; set; } = string.Empty;
+        public User(string id, string login, string password)
+        {
+            Id = id;
+            Login = login;
+            Password = password;
+        }
+        public User(string error) 
+        {
+        this.Error = error;
+        }
+        public User()
+        {
+
+        }
     }
 }

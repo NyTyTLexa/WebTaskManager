@@ -91,7 +91,7 @@ namespace WebApplication1.Controllers
 
         [HttpPost("login")]
             [SwaggerOperation("Login")]
-            public async Task<IActionResult> Login([FromBody] USER model)
+            public async Task<IActionResult> Login([FromBody] User model)
             {
                 if (ModelState.IsValid)
                 {
@@ -107,7 +107,7 @@ namespace WebApplication1.Controllers
 
         [HttpPost("register")]
             [SwaggerOperation("reg")]
-            public async Task<IActionResult> Register([FromBody] USER model)
+            public async Task<IActionResult> Register([FromBody] User model)
             {
                 if (ModelState.IsValid)
                 {
@@ -139,7 +139,7 @@ namespace WebApplication1.Controllers
 
 
 
-        private async Task<Model.USER> AuthenticateUser(string login, string password)
+        private async Task<Model.User> AuthenticateUser(string login, string password)
             { 
             var user = _appDbContext.USER.FirstOrDefault(a=>a.Login == login&&a.Password==password);
             if (user != null)
@@ -149,7 +149,7 @@ namespace WebApplication1.Controllers
                 return null;
             }
 
-            private async Task<USER> CreateUser(string login, string password)
+            private async Task<User> CreateUser(string login, string password)
             {
             var users = _appDbContext.USER;
                 if (users.Any())
@@ -158,7 +158,7 @@ namespace WebApplication1.Controllers
                 }
                 else
                 {
-                    var user = new USER();
+                    var user = new User();
                    user.Id = Guid.NewGuid().ToString();
                 user.Login = login;
                 user.Password = password;
@@ -167,7 +167,7 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            private string GenerateJwtToken(USER user)
+            private string GenerateJwtToken(User user)
             {
                 var claims = new[]
                 {
