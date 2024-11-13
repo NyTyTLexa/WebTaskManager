@@ -17,13 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DBTaskManager.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Folder Include="Style\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Style\" />
+    <None Update="DBTaskManager.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

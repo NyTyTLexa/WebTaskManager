@@ -175,7 +175,7 @@ namespace WebApplication1.Controllers
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
         };
             var key = new SymmetricSecurityKey(new byte[32]);
-                Encoding.UTF8.GetBytes("LANVER2024@");
+                Encoding.UTF8.GetBytes(KEY);
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var token = new JwtSecurityToken(
                     claims: claims,
