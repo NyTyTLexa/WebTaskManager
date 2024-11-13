@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "Web\Web\Web.csproj",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Client", "Web\Web.Client\Web.Client.csproj", "{B63F9D12-6175-496B-88F5-2D0BD705476B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopTaskManager", "DesktopTaskManager\DesktopTaskManager.csproj", "{BA6AA16C-3018-4791-B362-EE0F39FFF9A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B63F9D12-6175-496B-88F5-2D0BD705476B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B63F9D12-6175-496B-88F5-2D0BD705476B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B63F9D12-6175-496B-88F5-2D0BD705476B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA6AA16C-3018-4791-B362-EE0F39FFF9A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA6AA16C-3018-4791-B362-EE0F39FFF9A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA6AA16C-3018-4791-B362-EE0F39FFF9A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA6AA16C-3018-4791-B362-EE0F39FFF9A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
