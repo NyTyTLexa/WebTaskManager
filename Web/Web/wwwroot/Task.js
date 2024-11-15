@@ -33,4 +33,4 @@ function RemoveDiv(id,sid) {
 const parent = document.getElementById(sid+"-s")
 const child = document.getElementById(id);
 parent.removeChild(child);
-}s
+}
