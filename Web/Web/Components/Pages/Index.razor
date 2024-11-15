@@ -37,6 +37,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
+    <link rel="stylesheet" href="~/StyleAutorization.css" />
 </head>
 <body>
     <div class="container">
@@ -54,22 +55,13 @@
                 <label >Пароль</label>
                 <input type="password" id="password" @bind="password" placeholder="">
             </div>
-        <button class="login-button"  @onclick="Autorization">Войти</button>
+            <button class="login-button"  @onclick="Autorization">Войти</button>
             <button class="register-button">Регистрация</button>
         </div>
     </div>
 </body>
 </html>
-<script>
-    function blockInputs() {
-        document.getElementById("login").disabled = true;
-        document.getElementById("password").disabled = true;
-        setTimeout(function () {
-            document.getElementById("login").disabled = false;
-            document.getElementById("password").disabled = false;
-        }, 5000);
-    }
-</script>
+  <script src="~/Autorization.js"></script>
     <style>
     body {
         margin: 0;

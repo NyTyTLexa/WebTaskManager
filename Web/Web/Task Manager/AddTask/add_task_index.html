@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Новая задача</title>
+  <link rel="stylesheet" href="add_task_style.css">
+</head>
+<body>
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h2>Новая задача</h2>
+      <table>
+        <tr>
+          <th>Название</th>
+          <td><input type="text" id="task-name"></td>
+        </tr>
+        <tr>
+          <th>Описание</th>
+          <td><textarea id="task-description"></textarea></td>
+        </tr>
+        <tr>
+          <th>Срок</th>
+          <td><input type="date" id="task-deadline"></td>
+        </tr>
+        <tr>
+          <th>Ответственный</th>
+          <td><input type="text" id="task-responsible"></td>
+        </tr>
+      </table>
+      <button class="add-button" id="add-task">Добавить</button>
+    </div>
+  </div>
+
+  <script src="add_task_script.js"></script>
+
+</body>
+</html>
