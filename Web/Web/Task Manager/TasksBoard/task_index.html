@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task Board</title>
+  <link rel="stylesheet" href="task_style.css">
+</head>
+<body>
+
+  <div class="sidebar">
+    <h3>Menu</h3>
+    <nav class="menu">
+      <a href="#" class="menu-item is-active">Задачи</a>
+    </nav>
+  </div>
+
+  <div class="container">
+    <div class="column" id="todo">
+      <div class="header">
+        <h2>Новые</h2>
+        <button id="add-task-button">+</button> 
+        <div class="actions">
+          <button class="sort-button">↑↓</button>
+          <button class="filter-button">🔍</button>
+        </div>
+      </div>
+        <div class="task-area">
+          <div class="task" draggable="true">
+            <h3>Task 1</h3>
+            <p>Описание задачи 1.</p>
+            <p>Срок: 2023-12-31</p>
+            <div class="actions">
+              <button class="edit-task-button">Редактировать</button>
+              <button class="delete-task-button">Удалить</button>
+            </div>
+          </div>
+          <div class="task" draggable="true">
+            <h3>Task 2</h3>
+            <p>Описание задачи 2.</p>
+            <p>Срок: 2024-01-15</p>
+            <div class="actions">
+              <button class="edit-task-button">Редактировать</button>
+              <button class="delete-task-button">Удалить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="column" id="inprogress">
+        <div class="header">
+          <h2>В Работе</h2>
+          <div class="actions">
+            <button class="sort-button">↑↓</button>
+            <button class="filter-button">🔍</button>
+          </div>
+        </div>
+        <div class="task-area">
+          <div class="task" draggable="true">
+            <h3>Task 3</h3>
+            <p>Описание задачи 3.</p>
+            <p>Срок: 2023-12-20</p>
+            <div class="actions">
+              <button class="edit-task-button">Редактировать</button>
+              <button class="delete-task-button">Удалить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column" id="done">
+        <div class="header">
+          <h2>Закрытые</h2>
+          <div class="actions">
+            <button class="sort-button">↑↓</button>
+            <button class="filter-button">🔍</button>
+          </div>
+        </div>
+        <div class="task-area">
+          <div class="task" draggable="true">
+            <h3>Task 4</h3>
+            <p>Описание задачи 4.</p>
+            <p>Срок: 2023-12-10</p>
+            <div class="actions">
+              <button class="edit-task-button">Редактировать</button>
+              <button class="delete-task-button">Удалить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="task_script.js"></script>
+</body>
+</html>

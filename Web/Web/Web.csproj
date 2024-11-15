@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Task Manager\.vscode\launch.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Web.Client\Web.Client.csproj" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.6" />
