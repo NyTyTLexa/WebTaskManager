@@ -307,6 +307,7 @@ BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="10">
     <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
         <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBoxItemStyle}"/>
         <Setter Property="Margin" Value="5"></Setter>
+        <Setter Property="Foreground" Value="{StaticResource BorderColorControl}"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
@@ -316,11 +317,11 @@ BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="10">
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="PART_TextBlock" Grid.Column="0" Text="{TemplateBinding SelectedItem}" Margin="3" FontFamily="{StaticResource FontFamilyControl}" FontSize="16"/>
+                            <TextBlock x:Name="PART_TextBlock" Grid.Column="0" Text="{TemplateBinding SelectedItem}" Margin="3" FontFamily="{StaticResource FontFamilyControl}" Foreground="{StaticResource BorderColorControl}" FontSize="16"/>
                             <ToggleButton x:Name="PART_DropDownButton" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource ComboBoxToggleButtonStyle}"/>
-                            <Popup x:Name="PART_Popup" Placement="Bottom" AllowsTransparency="True" Width="{TemplateBinding ActualWidth}" IsOpen="{Binding IsChecked, ElementName=PART_DropDownButton}">
+                            <Popup x:Name="PART_Popup" Placement="Bottom" AllowsTransparency="True" Width="{TemplateBinding ActualWidth}" IsOpen="{Binding IsChecked, ElementName=PART_DropDownButton}" >
                                 <Border x:Name="PART_PopupBorder" Background="WhiteSmoke" BorderBrush="{StaticResource BorderColorControl}" BorderThickness="1" CornerRadius="5">
-                                    <ScrollViewer FontFamily="{StaticResource FontFamilyControl}">
+                                    <ScrollViewer FontFamily="{StaticResource FontFamilyControl}" >
                                         <ItemsPresenter />
                                     </ScrollViewer>
                                 </Border>

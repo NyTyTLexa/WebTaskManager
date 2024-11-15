@@ -49,7 +49,7 @@
                         <RowDefinition Height="40"></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" TextAlignment="Center" FontWeight="Bold" FontSize="25" VerticalAlignment="Center" FontFamily="{StaticResource FontFamilyControl}">
+                    <TextBlock Grid.Row="0" TextAlignment="Center" FontWeight="Bold" FontSize="25" VerticalAlignment="Center" Foreground="{StaticResource BorderColorControl}" FontFamily="{StaticResource FontFamilyControl}">
                         <Run>В</Run>
                         <Run>Х</Run>
                         <Run>О</Run>
