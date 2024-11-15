@@ -46,7 +46,6 @@ namespace DesktopTaskManager
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            // Код для кнопки "ЗАКРЫТЬ"
             this.DialogResult = null;
             this.Close();
         }
@@ -104,14 +103,12 @@ namespace DesktopTaskManager
 
         private void YesOrOkButton_Click(object sender, RoutedEventArgs e)
         {
-            // Код для кнопки "ДА" или "ОК"
             this.DialogResult = true;
             this.Close();
         }
 
         private void NotButton_Click(object sender, RoutedEventArgs e)
         {
-            // Код для кнопки "НЕТ"
             this.DialogResult = false;
             this.Close();
         }

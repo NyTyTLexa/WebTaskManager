@@ -44,11 +44,15 @@ namespace DesktopTaskManager
 
         private async void LoginEnter_Click(object sender, RoutedEventArgs e)
         {
+            // Получение пароля из стиля
+
             var password = ((PasswordBox)Password.Template.FindName("PART_PasswordBox", Password)).Password;
+
             if (Login.Text != string.Empty && password != string.Empty)
             {
                 var apiClient = new ApiClient("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiMTIzMTIzIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZlZXIiOiIxMjNlNDU2Ny1lODliLTEyZDMtYTQ1Ni00MjY2NTU0NDAwMDAiLCJleHAiOjE3MzA5MDY3NDN9.ero6vopzxEbCz0XWeRIQ0eNOKL6q_CeKRMDApZeTAyc", "LANVER2024@");
                 var result = await apiClient.AuthorizationUser(Login.Text, password);
+
                 if (result != null && result.Error != string.Empty) {
                     var messageWindow = new MessageWindow("Ошибка авторизации",
                         $"{result!.Error}", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -71,9 +75,7 @@ namespace DesktopTaskManager
 
         private void RegistrationText_Click(object sender, RoutedEventArgs e)
         {
-            //var taskWindow = new TaskWindow();
-            //taskWindow.Show();
-            //this.Close();
+            // Регистрация
         }
     }
 }

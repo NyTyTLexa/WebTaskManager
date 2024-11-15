@@ -30,7 +30,7 @@
             <Button Name="RoolUp" Grid.Column="2" Click="RoolUp_Click" Content="—" Style="{StaticResource ButtonHeader}"></Button>
             <Button x:Name="UnWrap" Grid.Column="3" Click="UnWrap_Click" Content="▢" Style="{StaticResource ButtonHeader}"></Button>
             <Button x:Name="Close" Grid.Column="4" Click="Close_Click" Content="✕" Style="{StaticResource ButtonHeader}"></Button>
-            <TextBlock Grid.Column="0" FontSize="18" FontFamily="{StaticResource FontFamilyControl}" TextAlignment="Center" VerticalAlignment="Center" Text="Менеджер задач"></TextBlock>
+            <TextBlock Grid.Column="0" FontSize="18" FontFamily="{StaticResource FontFamilyControl}" TextAlignment="Center" VerticalAlignment="Center" Text="Менеджер задач" Foreground="{StaticResource BorderColorControl}"></TextBlock>
         </Grid>
         <Grid Grid.Row="1" Style="{StaticResource TaskColor}">
             <Grid.RowDefinitions>
@@ -41,16 +41,29 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="250"></ColumnDefinition>
-                        <ColumnDefinition Width="250"></ColumnDefinition>
-                        <ColumnDefinition Width="250"></ColumnDefinition>
+                        <ColumnDefinition Width="350"></ColumnDefinition>
+                        <ColumnDefinition Width="350"></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition Width="70"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox x:Name="Status" Tag="Статус▼" Grid.Column="0" Style="{StaticResource ComboBoxStyle1}" Margin="5,5,5,0" Background="WhiteSmoke"></ComboBox>
-                    <DatePicker x:Name="StartData" FontSize="18" Grid.Column="1" FontFamily="{StaticResource FontFamilyControl}" Foreground="{StaticResource BorderColorControl}" Margin="5,5,5,5" Background="WhiteSmoke"/>
-                    <DatePicker x:Name="EndData" FontSize="18" Grid.Column="2" FontFamily="{StaticResource FontFamilyControl}" Foreground="{StaticResource BorderColorControl}" Margin="5,5,5,5" Background="WhiteSmoke"/>
-
+                    <ComboBox x:Name="StatusFilter" SelectionChanged="StatusFilter_SelectionChanged" Tag="Статус▼" Grid.Column="0" Style="{StaticResource ComboBoxStyle}" Margin="5" Background="WhiteSmoke"></ComboBox>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock FontFamily="{StaticResource FontFamilyControl}" Foreground="{StaticResource BorderColorControl}" Margin="5" Text="Дата начала:" VerticalAlignment="Center" FontSize="18"></TextBlock>
+                        <DatePicker x:Name="StartData" SelectedDateChanged="StartData_SelectedDateChanged" FontSize="18" Grid.Column="1" Style="{StaticResource DatePickerFilter}"/>
+                    </Grid>
+                    <Grid Grid.Column="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock FontFamily="{StaticResource FontFamilyControl}" Foreground="{StaticResource BorderColorControl}" Margin="5" Text="Дата окончания:" VerticalAlignment="Center" FontSize="18"></TextBlock>
+                        <DatePicker x:Name="EndData" SelectedDateChanged="EndData_SelectedDateChanged" FontSize="18" Grid.Column="2" Style="{StaticResource DatePickerFilter}"/>
+                    </Grid>
                     <Grid Grid.Column="4" Margin="0,0,10,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>
@@ -75,7 +88,7 @@
             </Border>
 
             <ScrollViewer Grid.Row="1" Margin="10" Name="ScrollTaskRow" Visibility="Visible">
-                <ListView Name="TaskBord" Style="{StaticResource ListViewTask}" ItemsSource="{Binding Tasks}">
+                <ListView Name="TaskBord" Style="{StaticResource ListViewTask}" ItemsSource="{Binding Task}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource Card}" Background="{StaticResource BorderColorControl}" BorderBrush="{StaticResource TransparentColor}">
@@ -95,10 +108,10 @@
                                             <TextBlock Name="NameTask" Style="{StaticResource TextBlockTask}" FontSize="18" FontWeight="Heavy" Text="{Binding Name}"></TextBlock>
                                         </Border>
                                         <Border Grid.Column="2" Style="{StaticResource Card}" Margin="5">
-                                            <TextBlock Name="PriorityTask" Style="{StaticResource TextBlockTask}" Text="{Binding Priority}"></TextBlock>
+                                            <TextBlock Name="PriorityTask" Style="{StaticResource TextBlockTask}" Text="{Binding PriorityName}"></TextBlock>
                                         </Border>
                                         <Border Grid.Column="3" Style="{StaticResource Card}" Margin="5">
-                                            <TextBlock Name="StatusTask" Style="{StaticResource TextBlockTask}" Text="{Binding Statuses}"></TextBlock>
+                                            <TextBlock Name="StatusTask" Style="{StaticResource TextBlockTask}" Text="{Binding StatusName}"></TextBlock>
                                         </Border>
                                     </Grid>
                                     <Grid Grid.Row="1">
@@ -134,7 +147,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ItemsControl x:Name="StatusesControl" ItemsSource="{Binding Statuses}">
+                    <ItemsControl x:Name="StatusesControl" ItemsSource="{Binding statusTasks}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="3" Height="{Binding ActualHeight, ElementName=ScrollTask}"/>
@@ -148,8 +161,8 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="{Binding Name}" Style="{StaticResource TextBlockTask}" FontWeight="Bold" Margin="5" FontSize="18"/>
-                                        <ListBox Grid.Row="1" ItemsSource="{Binding Tasks}" Background="{StaticResource BorderColorControl}" 
+                                        <TextBlock Text="{Binding Status.Name}" Style="{StaticResource TextBlockTask}" FontWeight="Bold" Margin="5" FontSize="18"/>
+                                        <ListBox x:Name="ListTask" Grid.Row="1" ItemsSource="{Binding Tasks}" Background="{StaticResource BorderColorControl}" 
                                                  BorderBrush="{StaticResource ForegroundButton}" BorderThickness="2"
                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -170,7 +183,7 @@
                                                                 <RowDefinition Height="Auto"/>
                                                             </Grid.RowDefinitions>
                                                             <TextBlock Text="{Binding Name}" Style="{StaticResource TextBlockTask}" Grid.Row="0" Margin="5"/>
-                                                            <TextBlock Text="{Binding Priority}" Style="{StaticResource TextBlockTask}" Grid.Row="1" Margin="5"/>
+                                                            <TextBlock Text="{Binding PriorityName}" Style="{StaticResource TextBlockTask}" Grid.Row="1" Margin="5"/>
                                                             <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Style="{StaticResource TextBlockTask}" Grid.Row="2" Margin="5"/>
                                                             <Grid Grid.Row="3" Margin="5">
                                                                 <Grid.ColumnDefinitions>

@@ -149,7 +149,7 @@
     <Style x:Key="TextBoxLogin" TargetType="TextBox">
         <Setter Property="FontFamily" Value="{StaticResource FontFamilyControl}"></Setter>
         <Setter Property="Background" Value="{StaticResource ForegroundButton}"></Setter>
-        <Setter Property="Foreground" Value="{StaticResource ForegroundTextBox}"></Setter>
+        <Setter Property="Foreground" Value="{StaticResource BorderColorControl}"></Setter>
         <Setter Property="BorderBrush" Value="{StaticResource BorderColorControl}"></Setter>
         <Setter Property="BorderThickness" Value="0,0,0,1"></Setter>
         <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
@@ -205,6 +205,7 @@
                                      Foreground="{TemplateBinding Foreground}" 
                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" 
                                      FontSize="{TemplateBinding FontSize}"
+                                         PasswordChar="{TemplateBinding PasswordChar}"
                                          BorderBrush="{StaticResource BorderColorControl}"/>
                         </Grid>
                     </Border>
@@ -213,9 +214,10 @@
         </Setter>
         <Setter Property="FontFamily" Value="{StaticResource FontFamilyControl}"/>
         <Setter Property="Background" Value="{StaticResource ForegroundButton}"/>
-        <Setter Property="Foreground" Value="{StaticResource ForegroundTextBox}"/>
+        <Setter Property="Foreground" Value="{StaticResource BorderColorControl}"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderColorControl}"></Setter>
         <Setter Property="BorderThickness" Value="0,0,0,1"></Setter>
+        <Setter Property="PasswordChar" Value="⁕"></Setter>
         <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
         <Setter Property="FontSize" Value="16"></Setter>
         <Setter Property="VerticalAlignment" Value="Center"></Setter>
@@ -304,6 +306,7 @@ BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="10">
 
     <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
         <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBoxItemStyle}"/>
+        <Setter Property="Margin" Value="5"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
@@ -350,6 +353,7 @@ BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="10">
 
 
     <Style x:Key="ComboBoxStyle1" TargetType="ComboBox">
+        <Setter Property="Margin" Value="5,5,5,0"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
@@ -378,7 +382,7 @@ BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="10">
                         <Popup Margin="0,5,0,0" Grid.Column="0" Grid.Row="1" Width="{TemplateBinding ActualWidth}" AllowsTransparency="True" x:Name="Popup" Placement="Bottom" IsOpen="{Binding IsChecked, ElementName=ToggleButton}" StaysOpen="False">
                             <Border CornerRadius="10" BorderBrush="{StaticResource TransparentColor}" Background="White" BorderThickness="1,5,1,1">
                                 <StackPanel Background="{StaticResource TransparentColor}">
-                                    <ListBox Margin="5,5,5,5" Background="{StaticResource BorderBackground}" FontFamily="{StaticResource FontFamilyControl}" BorderThickness="0" ItemsSource="{TemplateBinding ItemsSource}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+                                    <ListBox x:Name="ListCheckBox" Margin="5,5,5,5" Background="{StaticResource BorderBackground}" FontFamily="{StaticResource FontFamilyControl}" BorderThickness="0" ItemsSource="{TemplateBinding ItemsSource}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                                         <ListBox.ItemContainerStyle>
                                             <Style TargetType="ListBoxItem">
                                                 <Setter Property="Template">
@@ -399,17 +403,7 @@ BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="10">
                                         </ListBox.ItemContainerStyle>
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <CheckBox Content="{Binding Name}" Margin="5,5,5,5">
-                                                    <CheckBox.Style>
-                                                        <Style TargetType="CheckBox">
-                                                            <Style.Triggers>
-                                                                <Trigger Property="IsChecked" Value="True">
-                                                                    <Setter Property="Background" Value="#FFC5CAE9"/>
-                                                                </Trigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </CheckBox.Style>
-                                                </CheckBox>
+                                                <CheckBox Content="{Binding Name}" Name="CheckBoxItem" IsChecked="{Binding IsSelected}"/>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
@@ -533,4 +527,10 @@ BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="10">
         </Border>
     </DataTemplate>
 
+    <Style x:Key="DatePickerFilter" TargetType="DatePicker">
+        <Setter Property="BorderBrush" Value="{StaticResource BorderColorControl}"></Setter>
+        <Setter Property="Foreground" Value="{StaticResource BorderColorControl}"></Setter>
+        <Setter Property="Margin" Value="5"></Setter>
+        <Setter Property="Background" Value="WhiteSmoke"></Setter>
+    </Style>
 </ResourceDictionary>

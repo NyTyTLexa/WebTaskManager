@@ -11,7 +11,7 @@ namespace DesktopTaskManager.Model
     public class ApiClient
     {
         private readonly HttpClient _httpClient;
-        private JsonDocument _jsonDocument;
+        private JsonDocument _jsonDocument = null!;
         private JsonElement _token;
         public ApiClient(string apiKey, string apiSecret)
         {
@@ -84,16 +84,22 @@ namespace DesktopTaskManager.Model
             return priority!.ToList();
         }
 
-        public async Task<List<WebTaskManager.Model.Task>> GetTaskAsync(User userApi)
+        public async Task<List<WebTaskManager.Model.Task>> GetTaskAsync(User userApi, List<Status> statuses, List<Priority> priority)
         {
             var response = await _httpClient.GetAsync($"http://localhost:5000/api/Auth/GetUserTask?id={userApi.Id}");
             response.EnsureSuccessStatusCode();
             var taskContent = await response.Content.ReadAsStringAsync();
             _jsonDocument = JsonDocument.Parse(taskContent);
             _token = _jsonDocument.RootElement.GetProperty("token");
-            var task = JsonSerializer.Deserialize<List<WebTaskManager.Model.Task>>(_token!);
+            var tasks = JsonSerializer.Deserialize<List<WebTaskManager.Model.Task>>(_token!);
+            // заполнить свойства Status и Priority данными из API
+            foreach (var task in tasks!)
+            {
+                task.Status = statuses.FirstOrDefault(s => s.Id == task.StatusId)!;
+                task.Priority = priority.FirstOrDefault(p => p.Id == task.PriorityId)!;
+            }
 
-            return task!.ToList();
+            return tasks.ToList();
         }
     }
 }

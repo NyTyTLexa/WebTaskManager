@@ -4,30 +4,5 @@
              xmlns:local="clr-namespace:DesktopTaskManager"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <ResourceDictionary>
-
-            <Style BasedOn="{StaticResource {x:Type Grid}}"
-                   TargetType="Grid" x:Key="HeaderColor">
-                <Setter Property="Background">
-                    <Setter.Value>
-                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                            <LinearGradientBrush.GradientStops>
-                                <GradientStop Offset="0.0" Color="#347FD0" />
-                                <GradientStop Offset="1.0" Color="#5354C8" />
-                            </LinearGradientBrush.GradientStops>
-                        </LinearGradientBrush>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <Style BasedOn="{StaticResource {x:Type Border}}"
-                   TargetType="Border" x:Key="Card">
-                <Setter Property="Background" Value="White"></Setter>
-                <Setter Property="BorderBrush" Value="LightGray"></Setter>
-                <Setter Property="CornerRadius" Value="15"></Setter>
-                <Setter Property="Effect" Value="DropShadowEffect"></Setter>
-            </Style>
-
-        </ResourceDictionary>
     </Application.Resources>
 </Application>
