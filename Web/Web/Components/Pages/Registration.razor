@@ -1,5 +1,6 @@
 ﻿@page "/registration"
 @using Microsoft.AspNetCore.Components.Web
+@using System.Text.RegularExpressions
 @rendermode RenderMode.InteractiveServer
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
@@ -9,12 +10,18 @@
     public string Login { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public string RepeatPassword { get; set; } = string.Empty;
-    public string Answer { get; set; } = string.Empty;
     public string NickName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string Answer { get; set; } = string.Empty;
+    private string NicknameError { get; set; } = string.Empty;
+    private string EmailError { get; set; } = string.Empty;
+    private string LoginError { get; set; } = string.Empty;
+    private string PasswordError { get; set; } = string.Empty;
+    private string RepeatPasswordError { get; set; } = string.Empty;
 
     public async Task RegisterUser()
     {
+        string regexEmail = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
         try
         {
             var apiClient = new ApiClient("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
@@ -23,67 +30,61 @@
             "ZWlkZW50aWZlZXIiOiIxMjNlNDU2Ny00MjY2NTU0NDAwMDA" +
             "iLCJleHAiOjE3MzA5MDY3NDN9.ero6vopzxEbCz0XWeRIQ0eNOKL6q_CeKRMDApZeTAyc", "LANVER2024@");
 
-            if (apiClient == null)
+            if (string.IsNullOrEmpty(NickName))
             {
-                Answer = "Ошибка создания клиента API";
-                StateHasChanged();
-                await Task.Delay(5000);
-                Answer = "";
-                StateHasChanged();
-                return;
+                NicknameError = "Пожалуйста, введите никнейм";
             }
 
-            if (string.IsNullOrEmpty(Login) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(RepeatPassword)
-                || string.IsNullOrEmpty(NickName) ||  string.IsNullOrEmpty(Email))
+            if (string.IsNullOrEmpty(Login))
             {
-                Answer = "Поля являются пустыми";
-                StateHasChanged();
-                await Task.Delay(5000);
-                Answer = "";
-                StateHasChanged();
-                return;
+                LoginError = "Пожалуйста, введите логин";
+            }
+
+            if (string.IsNullOrEmpty(Password))
+            {
+                PasswordError = "Пожалуйста, введите пароль";
+            }
+
+            if (string.IsNullOrEmpty(RepeatPassword))
+            {
+                RepeatPasswordError = "Пожалуйста, повторите пароль";
             }
 
             if (Password != RepeatPassword)
             {
-                Answer = "Пароли не совпадают";
-                StateHasChanged();
-                await Task.Delay(5000);
-                Answer = "";
-                StateHasChanged();
-                return;
+                RepeatPasswordError = "Пароли не совпадают";
             }
 
-            try
+            if (!Regex.IsMatch(Email, regexEmail))
+            {
+                EmailError = "Неккоректный адрес почты";
+            }
+
+            if (!string.IsNullOrEmpty(NicknameError) || !Regex.IsMatch(Email, regexEmail) ||
+            !string.IsNullOrEmpty(LoginError) || !string.IsNullOrEmpty(PasswordError) ||
+            !string.IsNullOrEmpty(RepeatPasswordError))
+            {
+                StateHasChanged();
+                await Task.Delay(5000);
+                NicknameError = string.Empty;
+                EmailError = string.Empty;
+                LoginError = string.Empty;
+                PasswordError = string.Empty;
+                RepeatPasswordError = string.Empty;
+                StateHasChanged();
+            }
+            else
             {
                 var result = await apiClient.RegisterUser(Login, Password, NickName, Email);
-
-                if (result == null)
-                {
-                    Answer = "Ошибка регистрации";
-                    StateHasChanged();
-                    await Task.Delay(5000);
-                    Answer = "";
-                    StateHasChanged();
-                    return;
-                }
                 NavigationManager.NavigateTo($"/", true);
-            }
-            catch (Exception ex)
-            {
-                Answer = "Ошибка регистрации: " + ex.Message;
-                StateHasChanged();
-                await Task.Delay(5000);
-                Answer = "";
-                StateHasChanged();
             }
         }
         catch (Exception ex)
         {
-            Answer = "Ошибка: " + ex.Message;
+            Answer = "Ошибка регистрации " + ex.Message;
             StateHasChanged();
             await Task.Delay(5000);
-            Answer = "";
+            Answer = string.Empty;
             StateHasChanged();
         }
     }
@@ -103,27 +104,36 @@
             <div class="home-icon">
                 <img src="\Img\IconApp.png" />
             </div>
-            <h2 style="color:Red">@Answer</h2>
+            <h6 style="color:Red">@Answer</h6>
             <h1>Регистрация</h1>
             <div class="form-group">
                 <label>Введите никнейм</label>
                 <input type="nickname" id="nickname" @bind="NickName" placeholder="" />
+                <div class="error-message">@NicknameError</div>
             </div>
+
             <div class="form-group">
                 <label>Введите Email</label>
                 <input type="email" id="email" @bind="Email" placeholder="" />
+                <div class="error-message">@EmailError</div>
             </div>
+
             <div class="form-group">
                 <label>Введите логин</label>
-                <input type="login" id="login" @bind="Login" placeholder=""/>
+                <input type="login" id="login" @bind="Login" placeholder="" />
+                <div class="error-message">@LoginError</div>
             </div>
+
             <div class="form-group">
                 <label>Введите пароль</label>
-                <input type="password" id="password" @bind="Password" placeholder=""/>
+                <input type="password" id="password" @bind="Password" placeholder="" />
+                <div class="error-message">@PasswordError</div>
             </div>
+
             <div class="form-group">
                 <label>Повторите пароль</label>
-                <input type="password" id="repeat-password" @bind="RepeatPassword" placeholder=""/>
+                <input type="password" id="repeat-password" @bind="RepeatPassword" placeholder="" />
+                <div class="error-message">@RepeatPasswordError</div>
             </div>
             <button class="register-button" @onclick="RegisterUser">Регистрация</button>
         </div>
@@ -153,6 +163,11 @@
         box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
         width: 350px;
         text-align: center;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 12px;
     }
 
     .login-form {

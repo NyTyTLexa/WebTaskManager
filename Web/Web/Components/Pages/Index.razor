@@ -8,6 +8,8 @@
 {
     public string Login { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+    public string LoginError { get; set; } = string.Empty;
+    public string PasswordError { get; set; } = string.Empty;
     public string Answer { get; set; } = string.Empty;
 
     public async Task Autorization()
@@ -20,19 +22,49 @@
 
         JSRuntime.InvokeVoidAsync("blockInputs");
 
-        var result = await apiClient.AuthorizationUser(Login, Password);
+        try
+        {
+            if (string.IsNullOrEmpty(Login))
+            {
+                LoginError = "Пожалуйста, введите логин";
+            }
 
-        if (result != null && result.Error != string.Empty)
-        {
-            Answer = "Неверные данные";
-            StateHasChanged();
-            await Task.Delay(5000); 
-            Answer = "";
-            StateHasChanged(); 
+            if (string.IsNullOrEmpty(Password))
+            {
+                PasswordError = "Пожалуйста, введите пароль";
+            }
+
+            var result = await apiClient.AuthorizationUser(Login, Password);
+
+            if (result != null && result.Error != string.Empty)
+            {
+                Answer = "Неверные данные";
+                StateHasChanged();
+                await Task.Delay(5000);
+                Answer = "";
+                LoginError = string.Empty;
+                PasswordError = string.Empty;
+                StateHasChanged();
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(PasswordError) || !string.IsNullOrEmpty(LoginError))
+                {
+                    StateHasChanged();
+                    await Task.Delay(5000);
+                    LoginError = string.Empty;
+                    PasswordError = string.Empty;
+                    StateHasChanged();
+                }
+                else
+                {
+                    NavigationManager.NavigateTo($"/home/{result!.Id}", true);
+                }
+            }
         }
-        else
+        catch (Exception ex)
         {
-            NavigationManager.NavigateTo($"/home/{result!.Id}",true);
+            Answer = ex.Message;
         }
     }
 
@@ -55,15 +87,17 @@
             <div class="home-icon">
                 <img src="\Img\IconApp.png">
             </div>
-            <h2 style="color:Red">@Answer</h2>
+            <h6 style="color:Red">@Answer</h6>
             <h1>Войдите в систему</h1>
             <div class="form-group">
                 <label >Логин</label>
                 <input type="login" id="login" @bind="Login" placeholder="">
+                <div class="error-message">@LoginError</div>
             </div>
             <div class="form-group">
                 <label >Пароль</label>
                 <input type="password" id="password" @bind="Password" placeholder="">
+                <div class="error-message">@PasswordError</div>
             </div>
             <button class="login-button"  @onclick="Autorization">Войти</button>
             <button class="register-button" @onclick="RegistrationUser">Регистрация</button>
@@ -71,89 +105,96 @@
     </div>
 </body>
 </html>
-  <script src="~/Autorization.js"></script>
-    <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Arial', sans-serif;
-        background: linear-gradient(to bottom, #6284ff, #8366ff);
-        color: #333;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
+
+<script src="~/Autorization.js"></script>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #6284ff, #8366ff);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    text-align: center;
+}
+
+.error-message{
+    color: red; 
+    font-size: 12px;
+}
+
+.login-form {
+    margin-top: 30px;
+}
+
+.home-icon .circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-icon img {
+    width: 50%;
+    height: auto;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.login-button, .register-button {
+    background-color: #5479ff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+    .login-button:hover, .register-button:hover {
+        background-color: #395dff;
     }
 
-    .container {
-        background-color: white;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-        width: 350px;
-        text-align: center;
-    }
-
-    .login-form {
-        margin-top: 30px;
-    }
-
-    .home-icon .circle {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-color: white;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .home-icon img {
-        width: 50%;
-        height: auto;
-    }
-
-    h1 {
-        font-size: 24px;
-        margin-bottom: 30px;
-        font-weight: bold;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-
-    input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-sizing: border-box;
-        font-size: 16px;
-    }
-
-    .login-button, .register-button {
-        background-color: #5479ff;
-        color: white;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 18px;
-        transition: background-color 0.3s ease;
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        margin-bottom: 10px;
-    }
-
-        .login-button:hover, .register-button:hover {
-            background-color: #395dff;
-        }
-
-    </style>
+</style>
