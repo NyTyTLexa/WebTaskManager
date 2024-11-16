@@ -1,0 +1,219 @@
+﻿@page "/registration"
+@using Microsoft.AspNetCore.Components.Web
+@rendermode RenderMode.InteractiveServer
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+@code 
+{
+    public string Login { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string RepeatPassword { get; set; } = string.Empty;
+    public string Answer { get; set; } = string.Empty;
+    public string NickName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+
+    public async Task RegisterUser()
+    {
+        try
+        {
+            var apiClient = new ApiClient("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+            "eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoi" +
+            "MTIzMTIzIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFt" +
+            "ZWlkZW50aWZlZXIiOiIxMjNlNDU2Ny00MjY2NTU0NDAwMDA" +
+            "iLCJleHAiOjE3MzA5MDY3NDN9.ero6vopzxEbCz0XWeRIQ0eNOKL6q_CeKRMDApZeTAyc", "LANVER2024@");
+
+            if (apiClient == null)
+            {
+                Answer = "Ошибка создания клиента API";
+                StateHasChanged();
+                await Task.Delay(5000);
+                Answer = "";
+                StateHasChanged();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(Login) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(RepeatPassword)
+                || string.IsNullOrEmpty(NickName) ||  string.IsNullOrEmpty(Email))
+            {
+                Answer = "Поля являются пустыми";
+                StateHasChanged();
+                await Task.Delay(5000);
+                Answer = "";
+                StateHasChanged();
+                return;
+            }
+
+            if (Password != RepeatPassword)
+            {
+                Answer = "Пароли не совпадают";
+                StateHasChanged();
+                await Task.Delay(5000);
+                Answer = "";
+                StateHasChanged();
+                return;
+            }
+
+            try
+            {
+                var result = await apiClient.RegisterUser(Login, Password, NickName, Email);
+
+                if (result == null)
+                {
+                    Answer = "Ошибка регистрации";
+                    StateHasChanged();
+                    await Task.Delay(5000);
+                    Answer = "";
+                    StateHasChanged();
+                    return;
+                }
+                NavigationManager.NavigateTo($"/", true);
+            }
+            catch (Exception ex)
+            {
+                Answer = "Ошибка регистрации: " + ex.Message;
+                StateHasChanged();
+                await Task.Delay(5000);
+                Answer = "";
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Answer = "Ошибка: " + ex.Message;
+            StateHasChanged();
+            await Task.Delay(5000);
+            Answer = "";
+            StateHasChanged();
+        }
+    }
+}
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="~/StyleAutorization.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="registration-form">
+            <div class="home-icon">
+                <img src="\Img\IconApp.png" />
+            </div>
+            <h2 style="color:Red">@Answer</h2>
+            <h1>Регистрация</h1>
+            <div class="form-group">
+                <label>Введите никнейм</label>
+                <input type="nickname" id="nickname" @bind="NickName" placeholder="" />
+            </div>
+            <div class="form-group">
+                <label>Введите Email</label>
+                <input type="email" id="email" @bind="Email" placeholder="" />
+            </div>
+            <div class="form-group">
+                <label>Введите логин</label>
+                <input type="login" id="login" @bind="Login" placeholder=""/>
+            </div>
+            <div class="form-group">
+                <label>Введите пароль</label>
+                <input type="password" id="password" @bind="Password" placeholder=""/>
+            </div>
+            <div class="form-group">
+                <label>Повторите пароль</label>
+                <input type="password" id="repeat-password" @bind="RepeatPassword" placeholder=""/>
+            </div>
+            <button class="register-button" @onclick="RegisterUser">Регистрация</button>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Registration.js"></script>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to bottom, #6284ff, #8366ff);
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        text-align: center;
+    }
+
+    .login-form {
+        margin-top: 30px;
+    }
+
+    .home-icon .circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: white;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .home-icon img {
+        width: 50%;
+        height: auto;
+    }
+
+    h1 {
+        font-size: 24px;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    .login-button, .register-button {
+        background-color: #5479ff;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+    }
+
+        .login-button:hover, .register-button:hover {
+            background-color: #395dff;
+        }
+</style>

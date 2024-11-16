@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text;
 using Web.Model;
+using Microsoft.AspNetCore.Identity.Data;
 
 public class ApiClient
 {
@@ -90,5 +91,29 @@ public class ApiClient
         var task = JsonSerializer.Deserialize<List<Web.Model.Task>>(_token!);
 
         return task!.ToList();
+    }
+
+    public async Task<User> RegisterUser(string login, string password, string fullName, string email)
+    {
+        var registrationData = new User
+        {
+            Id = "string",
+            Login = login,
+            Password = password,
+            FullName = fullName,
+            Email = email
+        };
+
+        var content = new StringContent(JsonSerializer.Serialize(registrationData), Encoding.UTF8, "application/json");
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5000/api/Auth/register")
+        {
+            Content = content
+        };
+
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        return new User { Login = login, Password = password, FullName = fullName, Email = email };
     }
 }
