@@ -70,46 +70,46 @@
 @{
        void RenderTasksAndStatuses(List<Model.Task> tasks, List<Status> statuses)
         {
-        @foreach (var status in statuses)
+    @foreach (var status in statuses)
         {
-            <div class="column">
-                <div class="header">
-                    <h3>@status.name</h3>
-                    <div class="actions">
-                        <button class="sort-button" @onclick="@(e => SortButton(status))">↑↓</button>
+                <div class="column">
+                    <div class="header" style="color:aliceblue">
+                        <h3>@status.name</h3>
+                        <div class="actions">
+                            <button class="sort-button" @onclick="@(e => SortButton(status))">↑↓</button>
+                        </div>
                     </div>
-                </div>
-                <div id="@status.id-s">
-                    @foreach (var task in tasks)
+                    <div id="@status.id-s">
+                        @foreach (var task in tasks)
                     {
-                        @if (task.status_id == status.id)
+                            @if (task.status_id == status.id)
                         {
-                            <div class="task-area" id="@task.id">
-                                <div class="task" draggable="true">
-                                    <div class="panel">
-                                    <table>
-                                    <tr>
-                                      <td><input type="text" id="@task.id-text" style="border:none;" @bind-value=@task.name disabled="disabled"></input></td>
-                                    </tr>
-                                     <tr>
-                                                <td><textarea id="@task.id-description" style="border:none;" disabled="disabled">@task.description</textarea></td>
-                                     </tr>
-                                     <tr>
-                                     @{
+                                <div class="task-area" id="@task.id">
+                                    <div class="task" draggable="true">
+                                        <div class="panel">
+                                        <table>
+                                        <tr>
+                                          <td><input type="text" id="@task.id-text" style="border:none;" @bind-value=@task.name disabled="disabled"></input></td>
+                                        </tr>
+                                         <tr>
+                                                    <td><textarea id="@task.id-description" style="border:none;" disabled="disabled">@task.description</textarea></td>
+                                         </tr>
+                                         <tr>
+                                         @{
                                          parsedDate = Convert.ToDateTime(@task.date_end);
-                                     }
-                                                <td><input type="date" id="@task.id-deadline" @bind-value=@parsedDate style="border:none;" disabled="disabled"></td>
-                                     </tr>
-                                        </table>
-                                        <button class="edit-task-button" id="@task.id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
-                                        <button class="delete-task-button" @onclick="@(e => DeleteButton(task,status))">❌</button>
+                                         }
+                                                    <td><input type="date" id="@task.id-deadline" @bind-value=@parsedDate style="border:none;" disabled="disabled"></td>
+                                         </tr>
+                                            </table>
+                                            <button class="edit-task-button" id="@task.id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
+                                            <button class="delete-task-button" @onclick="@(e => DeleteButton(task,status))">❌</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                         }
                     }
+                    </div>
                 </div>
-            </div>
         }
     }
 }
@@ -120,107 +120,215 @@
      <link rel="stylesheet" href="~/StyleTask.css" />
 </head>
 <body>
-    <div class="sidebar">
-        <h3>Меню</h3>
-        <nav class="menu">
-            <a href="#" class="menu-item is-active">Задачи</a>
-        </nav>
-    </div>
+    <header>
+            <img src="/Img/IconApp.png" class="logo" alt="Логотип компании" />
+            <nav class="main-nav">
+                <ul>
+                <li><img src="/Img/Home.png" width="50" class="header-nav-ul-li-img" /><a href="#"><a class="header-nav-ul-li-a"</a>Главная</a></li>
+                <li><img src="/Img/Exit.png" width="50" /><a href="#" class="header-nav-ul-li-img"><a class="header-nav-ul-li"></a>Выйти</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <div class="hamburger"></div>
+            </div>
+    </header>
+    <main>
     <div class="container">
     @if(Tasks!=null&Statuses!=null)
         {
             RenderTasksAndStatuses(Tasks, Statuses);
         }
     </div>
+    </main>
  </body>
 </html>
-<style>
-
+<style type="text/css">
 body {
     font-family: 'Arial', sans-serif;
-    display: flex;
-    min-height: 100%;
     margin: 0;
     background: #8282ff;
 }
 
-.sidebar {
-    background-color: #2e3047;
-    width: 250px;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
+.logo
+{
+    width:10%;
 }
 
-    .sidebar h3 {
-        color: #707793;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        margin-bottom: 0.5em;
-        text-align: center;
-    }
-
-    .sidebar .menu {
-        margin: 0 -1rem;
-    }
-
-        .sidebar .menu .menu-item {
-            display: block;
-            padding: 1em;
-            color: #FFF;
-            text-decoration: none;
-            transition: 0.2s linear;
-        }
-
-            .sidebar .menu .menu-item.is-active {
-                background-color: #3f4259;
-            }
-
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin-left: 270px;
-    padding: 20px;
-    width: calc(100vw - 270px); /* Задаем ширину контейнера как 100% ширины экрана минус ширина боковой панели */
-    height: 100vh;
-    overflow-y: auto; /* Добавляем скролл по вертикали */
-}
-
-
-.column {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    width: 33%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    gap: 20px;
-}
-
-    .column h2 {
-        margin-bottom: 10px;
-        text-align: center;
-    }
-
-    .column .header {
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-radius: 5px 5px 0 0;
-        margin-bottom: 10px;
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #333;
+        color: #fff;
+        padding: 1em;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        z-index: 1000;
     }
 
-        .column .header button {
+        header h1.logo {
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        header nav.main-nav {
+            display: none;
+        }
+
+            header nav.main-nav ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            header nav.main-nav li {
+                margin-right: 20px;
+            }
+
+            header nav.main-nav a {
+                color: #fff;
+                text-decoration: none;
+            }
+
+        header.menu-toggle {
+            display: none;
+        }
+
+        /* Styles for desktop (above 900px) */
+@@media (min-width: 900px) {
+    .logo{
+        width:100px;
+    }
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; /* adjust the width to your liking */
+    height: 100vh;
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  header h1.logo {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  header nav.main-nav {
+    display: block;
+  }
+
+  header nav.main-nav ul {
+    flex-direction: column;
+  }
+
+  header nav.main-nav li {
+    margin-bottom: 20px;
+  }
+
+  header.menu-toggle {
+    display: none;
+  }
+
+        .main {
+            display: flex;
+            flex: 1;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            margin-left: 20%;
+            width: 90%; /* Задаем ширину контейнера как 100% ширины экрана минус ширина боковой панели */
+            height: 100vh;
+            overflow-y: auto; /* Добавляем скролл по вертикали */
+        }
+
+
+        .column {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            width: 33%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            gap: 20px;
+        }
+
+            .column h2 {
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .column .header {
+                background-color: #f0f0f0;
+                padding: 10px;
+                border-radius: 5px 5px 0 0;
+                margin-bottom: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+                .column .header button {
+                    background-color: #fff;
+                    border: none;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    color: #333;
+                    transition: background-color 0.2s ease;
+                }
+
+                    .column .header button:hover {
+                        background-color: #eee;
+                    }
+
+        .task .actions {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .task {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: move;
+            user-select: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: relative;
+            display: flex;
+        }
+
+        .panel h3 {
+            margin-top: 0;
+        }
+
+        .panel p {
+            margin-bottom: 5px;
+        }
+
+        .panel .actions button {
             background-color: #fff;
             border: none;
-            padding: 5px 10px;
+            padding: 5px 8px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
@@ -228,133 +336,124 @@ body {
             transition: background-color 0.2s ease;
         }
 
-            .column .header button:hover {
-                background-color: #eee;
-            }
+        .edit-task-button {
+            border: none;
+            background: white;
+        }
 
-.task .actions {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    display: flex;
-    gap: 5px;
-}
+        .delete-task-button {
+            border: none;
+            background: white;
+        }
 
-.task {
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    cursor: move;
-    user-select: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    position: relative;
-    display: flex;
-}
-
-.panel h3 {
-    margin-top: 0;
-}
-
-.panel p {
-    margin-bottom: 5px;
-}
-
-.panel .actions button {
-    background-color: #fff;
-    border: none;
-    padding: 5px 8px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    color: #333;
-    transition: background-color 0.2s ease;
-}
-
-.edit-task-button {
-    border: none;
-    background: white;
-}
-
-.delete-task-button {
-    border: none;
-    background: white;
-}
-
-.task .actions button:hover {
-    background-color: #eee;
-}
-
-.task.dragging {
-    opacity: 0.5;
-}
-
-.column.over {
-    background-color: #eee;
-}
-
-.column.over {
-    background-color: #eee;
-}
-
-/* Стили для статусов */
-#todo .header {
-    background-color: #7acf18;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) inset; /* Внутренняя тень */
-}
-
-#inprogress .header {
-    background-color: #31b5e9;
-    box-shadow: 0 2px 5px rgba(255, 165, 0, 0.3) inset; /* Внутренняя тень */
-}
-
-#done .header {
-    background-color: #e26c57;
-    box-shadow: 0 2px 5px rgba(0, 128, 0, 0.3) inset; /* Внутренняя тень */
-}
-
-/* Полупрозрачность области задач */
-.column .task-area {
-    position: relative; /* Чтобы добавить тень к области задач */
-    background-color: rgba(255, 255, 255, 0.7); /* Полупрозрачный белый */
-    padding: 10px;
-    border-radius: 0 0 5px 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) inset; /* Внутренняя тень */
-}
-
-    .column .task-area:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.7); /* Полупрозрачный белый */
-        z-index: -1; /* Чтобы тень была видна */
-    }
-
-.column .header .actions {
-    display: flex;
-    gap: 5px;
-}
-
-    .column .header .actions button {
-        background-color: #fff;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1rem;
-        color: #333;
-        transition: background-color 0.2s ease;
-    }
-
-        .column .header .actions button:hover {
+        .task .actions button:hover {
             background-color: #eee;
         }
-        </style>
-        <script>
 
+        .task.dragging {
+            opacity: 0.5;
+        }
+
+        .column.over {
+            background-color: #eee;
+        }
+
+        .column.over {
+            background-color: #eee;
+        }
+
+        #inprogress .header {
+            background-color: #31b5e9;
+            box-shadow: 0 2px 5px rgba(255, 165, 0, 0.3) inset; /* Внутренняя тень */
+        }
+
+        #done .header {
+            background-color: #e26c57;
+            box-shadow: 0 2px 5px rgba(0, 128, 0, 0.3) inset; /* Внутренняя тень */
+        }
+        /* Полупрозрачность области задач */
+        .column .task-area {
+            position: relative; /* Чтобы добавить тень к области задач */
+            background-color: rgba(255, 255, 255, 0.7); /* Полупрозрачный белый */
+            padding: 10px;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) inset; /* Внутренняя тень */
+        }
+
+            .column .task-area:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.7); /* Полупрозрачный белый */
+                z-index: -1; /* Чтобы тень была видна */
+            }
+
+        .column .header .actions {
+            display: flex;
+            gap: 5px;
+        }
+
+            .column .header .actions button {
+                background-color: #fff;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+                color: #333;
+                transition: background-color 0.2s ease;
+            }
+
+                .column .header .actions button:hover {
+                    background-color: #eee;
+                }
+}
+
+/* Styles for mobile (below 900px) */
+ @@media(max-width: 899px) {
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  header h1.logo {
+    font-size: 1.5em;
+    margin: 0;
+  }
+
+  header nav.main-nav {
+    display: none;
+  }
+
+  header.menu-toggle {
+    display: block;
+  }
+
+  header.menu-toggle.hamburger {
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+
+
+}
+</style>
+    <script>
     function SortDiv(sid, flag) {
         const parent = document.getElementById(sid + "-s");
         const children = parent.children;
@@ -389,4 +488,5 @@ body {
         const child = document.getElementById(id);
         parent.removeChild(child);
     } 
+
         </script>
