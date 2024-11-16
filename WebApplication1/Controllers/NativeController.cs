@@ -111,7 +111,7 @@ namespace WebApplication1.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var user = await CreateUser(model.Login, model.Password);
+                    var user = await CreateUser(model);
                     if (user != null)
                     {
                         var token = GenerateJwtToken(user);
@@ -149,20 +149,18 @@ namespace WebApplication1.Controllers
                 return null;
             }
 
-            private async Task<User> CreateUser(string login, string password)
+            private async Task<User> CreateUser(User user)
             {
-            var users = _appDbContext.USER;
-                if (users.Any())
+            var users = _appDbContext.USER.ToList();
+                if (users.Any(a=>a.Login==user.Login))
                 {
                     return null;
                 }
                 else
                 {
-                    var user = new User();
                    user.Id = Guid.NewGuid().ToString();
-                user.Login = login;
-                user.Password = password;
-                    users.Add(user);
+                _appDbContext.USER.Add(user);
+                _appDbContext.SaveChanges();
                     return user;
                 }
             }
