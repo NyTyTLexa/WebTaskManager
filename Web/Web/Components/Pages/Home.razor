@@ -39,7 +39,8 @@
     }
     public void AddButton(Model.Status status)
     {
-
+        var NewTask = new Model.Task() { id = Tasks.Count + 1 };
+        JSRuntime.InvokeVoidAsync("AddDiv", status.id,NewTask);
     }
     public void EditButton(Model.Task task,Model.Status status)
     {
@@ -72,44 +73,44 @@
         {
     @foreach (var status in statuses)
         {
-                <div class="column">
-                    <div class="header" style="color:aliceblue">
-                        <h3>@status.name</h3>
-                        <div class="actions">
-                            <button class="sort-button" @onclick="@(e => SortButton(status))">↑↓</button>
-                        </div>
-                    </div>
-                    <div id="@status.id-s">
-                        @foreach (var task in tasks)
-                    {
-                            @if (task.status_id == status.id)
-                        {
-                                <div class="task-area" id="@task.id">
-                                    <div class="task" draggable="true">
-                                        <div class="panel">
-                                        <table>
-                                        <tr>
-                                          <td><input type="text" id="@task.id-text" style="border:none;" @bind-value=@task.name disabled="disabled"></input></td>
-                                        </tr>
-                                         <tr>
-                                                    <td><textarea id="@task.id-description" style="border:none;" disabled="disabled">@task.description</textarea></td>
-                                         </tr>
-                                         <tr>
-                                         @{
-                                         parsedDate = Convert.ToDateTime(@task.date_end);
-                                         }
-                                                    <td><input type="date" id="@task.id-deadline" @bind-value=@parsedDate style="border:none;" disabled="disabled"></td>
-                                         </tr>
-                                            </table>
-                                            <button class="edit-task-button" id="@task.id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
-                                            <button class="delete-task-button" @onclick="@(e => DeleteButton(task,status))">❌</button>
-                                        </div>
+                            <div class="column">
+                                <div class="header">
+                                    <h4>@status.name</h4>
+                                    <div class="actions">
+                        <button @onclick="@(e => AddButton(status))">➕</button>
+                        <button class="sort-button" style="color:#8282ff;font-weight:800" @onclick="@(e => SortButton(status))">↑↓</button>
                                     </div>
                                 </div>
+                                <div id="@status.id-s">
+                                    @foreach (var task in tasks)
+                    {
+                                        @if (task.status_id == status.id)
+                        {
+                                            <div class="task-area" id="@task.id">
+                                                <div class="task" draggable="true">
+                                                    <div class="panel">
+                                                    <table>
+                                                    <tr>
+                                                      <td><input type="text" id="@task.id-text" style="border:none;" @bind-value=@task.name disabled="disabled"></input></td>
+                                                    </tr>
+                                                     <tr>
+                                                                <td>
+                                                                <input id="@task.id-description" style="border:none;" disabled="disabled" @bind-value=task.description></input>
+                                                                </td>
+                                                     </tr>
+                                                     <tr>
+                                                                <td><input type="date" id="@task.id-deadline" @bind-value=task.dateEnd style="border:none;" disabled="disabled"></td>
+                                                     </tr>
+                                                        </table>
+                                                        <button class="edit-task-button" id="@task.id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
+                                                        <button class="delete-task-button" @onclick="@(e => DeleteButton(task,status))">❌</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                         }
                     }
-                    </div>
-                </div>
+                                </div>
+                            </div>
         }
     }
 }
@@ -124,8 +125,18 @@
             <img src="/Img/IconApp.png" class="logo" alt="Логотип компании" />
             <nav class="main-nav">
                 <ul>
-                <li><img src="/Img/Home.png" width="50" class="header-nav-ul-li-img" /><a href="#"><a class="header-nav-ul-li-a"</a>Главная</a></li>
-                <li><img src="/Img/Exit.png" width="50" /><a href="#" class="header-nav-ul-li-img"><a class="header-nav-ul-li"></a>Выйти</a></li>
+                <li>
+                <a href="/home/@TokenUser">
+                        <img src="/Img/Home.png" width="30" class="header-nav-ul-li-img" />
+                        <span> Главная</span>
+                </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <img src="/Img/Exit.png" width="30" class="header-nav-ul-li-img" />
+                        <span>Выйти</span>
+                    </a>
+                </li>
                 </ul>
             </nav>
             <div class="menu-toggle">
@@ -175,6 +186,7 @@ body {
 
         header nav.main-nav {
             display: none;
+            width:100%;
         }
 
             header nav.main-nav ul {
@@ -184,14 +196,19 @@ body {
                 display: flex;
             }
 
-            header nav.main-nav li {
-                margin-right: 20px;
-            }
 
             header nav.main-nav a {
                 color: #fff;
                 text-decoration: none;
+                width:100%;
+                margin:0;
             }
+
+            header nav.main-nav a:hover {
+                background:grey;
+                border-radius:6px;
+            }
+
 
         header.menu-toggle {
             display: none;
@@ -232,7 +249,9 @@ body {
   }
 
   header nav.main-nav li {
-    margin-bottom: 20px;
+    margin:5px;
+    display:flex;
+    flex:1;
   }
 
   header.menu-toggle {
@@ -251,9 +270,9 @@ body {
             align-items: center;
             gap: 20px;
             padding: 20px;
-            margin-left: 20%;
+            margin-left: 15%;
             width: 90%; /* Задаем ширину контейнера как 100% ширины экрана минус ширина боковой панели */
-            height: 100vh;
+            height: 90%;
             overflow-y: auto; /* Добавляем скролл по вертикали */
         }
 
@@ -297,13 +316,7 @@ body {
                         background-color: #eee;
                     }
 
-        .task .actions {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            display: flex;
-            gap: 5px;
-        }
+
 
         .task {
             background-color: #fff;
@@ -315,6 +328,11 @@ body {
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             position: relative;
             display: flex;
+            width:100%;
+        }
+
+        .panel{
+            width:100%;
         }
 
         .panel h3 {
@@ -336,6 +354,17 @@ body {
             transition: background-color 0.2s ease;
         }
 
+        .panel table {
+            width: 100%;
+        }
+
+        .panel .table tr {
+            width: 100%;
+        }
+        .panel table tr td input{
+            width: 100%;
+        }
+        
         .edit-task-button {
             border: none;
             background: white;
@@ -382,7 +411,6 @@ body {
 
             .column .task-area:before {
                 content: '';
-                position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -413,7 +441,7 @@ body {
 }
 
 /* Styles for mobile (below 900px) */
- @@media(max-width: 899px) {
+ @@media(max-width: 900px) {
   header {
     position: fixed;
     top: 0;
@@ -423,6 +451,7 @@ body {
     color: #fff;
     padding: 1em;
     display: flex;
+    flex:1;
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
@@ -437,11 +466,8 @@ body {
     display: none;
   }
 
-  header.menu-toggle {
-    display: block;
-  }
 
-  header.menu-toggle.hamburger {
+ .menu-toggle.hamburger {
     width: 40px;
     height: 40px;
     background-color: #fff;
@@ -449,7 +475,35 @@ body {
     cursor: pointer;
   }
 
+            .menu-toggle {
+                display: block;
+            }
 
+        .main {
+            width:100%;
+        }
+
+        .container {
+            justify-content: center;
+            align-items: center;
+            gap: 0px;
+            padding: 0px;
+            margin-left:0px;
+            margin-top: 10%;
+            width: 100%; /* Задаем ширину контейнера как 100% ширины экрана минус ширина боковой панели */
+            height: 100vh;
+            overflow-y: auto; /* Добавляем скролл по вертикали */
+        }
+
+
+        .column {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            width: 33%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            gap: 20px;
+        }
 
 }
 </style>
@@ -484,9 +538,25 @@ body {
         document.getElementById(id + "-deadline").disabled = flag;
     }
     function RemoveDiv(id, sid) {
-        const parent = document.getElementById(sid + "-s")
-        const child = document.getElementById(id);
-        parent.removeChild(child);
+        const flag = document.getElementById(id + "-text").disabled;
+        if (flag) {
+            const parent = document.getElementById(sid + "-s")
+            const child = document.getElementById(id);
+            parent.removeChild(child);
+        }
+        if(!flag)
+        {
+            const element = document.getElementById(id + "-bt-task");
+            element.textContent = "📒";
+            document.getElementById(id + "-text").disabled = !flag;
+            document.getElementById(id + "-description").disabled = !flag;
+            document.getElementById(id + "-deadline").disabled = !flag;
+        }
     } 
+    function AddDiv(sid,newTask)
+    {
+        const parent = document.getElementById(sid + "-s");
+        
+    }
 
         </script>

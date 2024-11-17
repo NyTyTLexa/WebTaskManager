@@ -14,6 +14,7 @@
             {
                 return Convert.ToDateTime(date_end);
             }
+            set { date_end = value.ToString(); }
         }
         virtual public string DeadLine { get
             {
