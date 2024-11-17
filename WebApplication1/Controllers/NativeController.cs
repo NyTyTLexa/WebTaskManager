@@ -105,7 +105,7 @@ namespace WebApplication1.Controllers
                 return Unauthorized();
             }
 
-        [HttpPost("register")]
+            [HttpPost("register")]
             [SwaggerOperation("reg")]
             public async Task<IActionResult> Register([FromBody] User model)
             {

@@ -1,25 +1,31 @@
-﻿namespace Web.Model
+﻿using System.Text.Json.Serialization;
+
+namespace Web.Model
 {
     public class Task
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public int priority_id { get; set; }
-        public int status_id { get; set; }
-        public string date_start { get; set; }
-        public string date_end { get; set; }
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = string.Empty;
+        [JsonPropertyName("description")]
+        public string Description { get; set; } = string.Empty;
+        [JsonPropertyName("priority_id")]
+        public int PriorityId { get; set; }
+        [JsonPropertyName("status_id")]
+        public int StatusId { get; set; }
+        [JsonPropertyName("date_start")]
+        public string DateStart { get; set; } = string.Empty;
+        [JsonPropertyName("date_end")]
+        public string DateEnd { get; set; } = string.Empty;
 
-        public DateTime dateEnd { get
+        virtual public string DeadLine
+        { 
+            get
             {
                 return Convert.ToDateTime(date_end);
             }
-            set { date_end = value.ToString(); }
         }
-        virtual public string DeadLine { get
-            {
-                return dateEnd.ToShortDateString();
-            } }
 
     }
 }

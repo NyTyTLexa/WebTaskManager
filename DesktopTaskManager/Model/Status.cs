@@ -8,6 +8,5 @@ namespace WebTaskManager.Model
         public int Id { get; set; }
         [JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
-        public List<Task> Tasks { get; set; } = new List<Task>();
     }
 }

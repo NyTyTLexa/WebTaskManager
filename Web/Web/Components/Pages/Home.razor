@@ -6,13 +6,14 @@
 @code
 {
     [Parameter]
-    public string TokenUser{ get; set; }
-    public bool FlagSort{ get; set; }
+    public string TokenUser { get; set; } = string.Empty;
+    public bool FlagSort { get; set; }
     public DateTime parsedDate { get; set; }
-    public List<Model.Task> Tasks{get;set;}
-    public string TaskStatus{ get; set; }
-    public List<Model.Status> Statuses{ get; set; }
-    public List<Model.Priority> Priorities{ get; set; }
+    public List<Model.Task> Tasks { get; set; } = new List<Model.Task>();
+    public string TaskStatus { get; set; } = string.Empty;
+    public List<Model.Status> Statuses { get; set; } = new List<Model.Status>();
+    public List<Model.Priority> Priorities { get; set; } = new List<Model.Priority>();
+
     protected override async System.Threading.Tasks.Task OnInitializedAsync()
     {
         var apiClient = new ApiClient("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
@@ -37,33 +38,38 @@
         Priorities = priorities;
 
     }
+
     public void AddButton(Model.Status status)
     {
         var NewTask = new Model.Task() { id = Tasks.Count + 1 };
         JSRuntime.InvokeVoidAsync("AddDiv", status.id,NewTask);
     }
+
     public void EditButton(Model.Task task,Model.Status status)
     {
-        JSRuntime.InvokeVoidAsync("blockInputs", task.id);
+        JSRuntime.InvokeVoidAsync("blockInputs", task.Id);
     }
+
     public void DeleteButton(Model.Task task,Model.Status status)
     {
-        JSRuntime.InvokeVoidAsync("RemoveDiv", task.id,status.id);
+        JSRuntime.InvokeVoidAsync("RemoveDiv", task.Id,status.Id);
     }
+
     public void FilterButton()
     {
 
     }
+
     public void SortButton(Model.Status status)
     {
         if (FlagSort)
         {
-            JSRuntime.InvokeVoidAsync("SortDiv", status.id, FlagSort);
+            JSRuntime.InvokeVoidAsync("SortDiv", status.Id, FlagSort);
             FlagSort = false;
         }
         else
         {
-            JSRuntime.InvokeVoidAsync("SortDiv", status.id, FlagSort);
+            JSRuntime.InvokeVoidAsync("SortDiv", status.Id, FlagSort);
             FlagSort = true;
         }
     }
@@ -73,19 +79,40 @@
         {
     @foreach (var status in statuses)
         {
-                            <div class="column">
-                                <div class="header">
-                                    <h4>@status.name</h4>
-                                    <div class="actions">
-                        <button @onclick="@(e => AddButton(status))">➕</button>
-                        <button class="sort-button" style="color:#8282ff;font-weight:800" @onclick="@(e => SortButton(status))">↑↓</button>
+            <div class="column">
+                <div class="header">
+                    <h3>@status.Name</h3>
+                    <div class="actions">
+                        <button class="sort-button" @onclick="@(e => SortButton(status))">↑↓</button>
+                    </div>
+                </div>
+                <div id="@status.Id-s">
+                    @foreach (var task in tasks)
+                    {
+                        @if (task.StatusId == status.Id)
+                        {
+                            <div class="task-area" id="@task.Id">
+                                <div class="task" draggable="true">
+                                    <div class="panel">
+                                    <table>
+                                    <tr>
+                                      <td><input type="text" id="@task.Id-text" style="border:none;" @bind-value=@task.Name disabled="disabled"></input></td>
+                                    </tr>
+                                     <tr>
+                                                <td><textarea id="@task.Id-description" style="border:none;" disabled="disabled">@task.Description</textarea></td>
+                                     </tr>
+                                     <tr>
+                                     @{
+                                         parsedDate = Convert.ToDateTime(@task.DateEnd);
+                                     }
+                                                <td><input type="date" id="@task.Id-deadline" @bind-value=@parsedDate style="border:none;" disabled="disabled"></td>
+                                     </tr>
+                                        </table>
+                                        <button class="edit-task-button" id="@task.Id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
+                                        <button class="delete-task-button" @onclick="@(e => DeleteButton(task,status))">❌</button>
                                     </div>
                                 </div>
-                                <div id="@status.id-s">
-                                    @foreach (var task in tasks)
-                    {
-                                        @if (task.status_id == status.id)
-                        {
+                            </div>
                                             <div class="task-area" id="@task.id">
                                                 <div class="task" draggable="true">
                                                     <div class="panel">
@@ -147,7 +174,7 @@
     <div class="container">
     @if(Tasks!=null&Statuses!=null)
         {
-            RenderTasksAndStatuses(Tasks, Statuses);
+            RenderTasksAndStatuses(Tasks!, Statuses!);
         }
     </div>
     </main>
