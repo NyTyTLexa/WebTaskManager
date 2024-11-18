@@ -41,8 +41,8 @@
 
     public void AddButton(Model.Status status)
     {
-        var NewTask = new Model.Task() { id = Tasks.Count + 1 };
-        JSRuntime.InvokeVoidAsync("AddDiv", status.id,NewTask);
+        var NewTask = new Model.Task() { Id = Tasks.Count + 1 };
+        JSRuntime.InvokeVoidAsync("AddDiv", status.Id,NewTask);
     }
 
     public void EditButton(Model.Task task,Model.Status status)
@@ -83,6 +83,7 @@
                 <div class="header">
                     <h3>@status.Name</h3>
                     <div class="actions">
+                        <button class="sort-button" @onclick="@(e => AddButton(status))"><b>+</b></button>
                         <button class="sort-button" @onclick="@(e => SortButton(status))">↑↓</button>
                     </div>
                 </div>
@@ -91,45 +92,23 @@
                     {
                         @if (task.StatusId == status.Id)
                         {
-                            <div class="task-area" id="@task.Id">
-                                <div class="task" draggable="true">
-                                    <div class="panel">
-                                    <table>
-                                    <tr>
-                                      <td><input type="text" id="@task.Id-text" style="border:none;" @bind-value=@task.Name disabled="disabled"></input></td>
-                                    </tr>
-                                     <tr>
-                                                <td><textarea id="@task.Id-description" style="border:none;" disabled="disabled">@task.Description</textarea></td>
-                                     </tr>
-                                     <tr>
-                                     @{
-                                         parsedDate = Convert.ToDateTime(@task.DateEnd);
-                                     }
-                                                <td><input type="date" id="@task.Id-deadline" @bind-value=@parsedDate style="border:none;" disabled="disabled"></td>
-                                     </tr>
-                                        </table>
-                                        <button class="edit-task-button" id="@task.Id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
-                                        <button class="delete-task-button" @onclick="@(e => DeleteButton(task,status))">❌</button>
-                                    </div>
-                                </div>
-                            </div>
-                                            <div class="task-area" id="@task.id">
+                                            <div class="task-area" id="@task.Id">
                                                 <div class="task" draggable="true">
                                                     <div class="panel">
                                                     <table>
                                                     <tr>
-                                                      <td><input type="text" id="@task.id-text" style="border:none;" @bind-value=@task.name disabled="disabled"></input></td>
+                                                      <td><input type="text" id="@task.Id-text" style="border:none;" @bind-value=@task.Name disabled="disabled"></input></td>
                                                     </tr>
                                                      <tr>
                                                                 <td>
-                                                                <input id="@task.id-description" style="border:none;" disabled="disabled" @bind-value=task.description></input>
+                                                                <input id="@task.Id-description" style="border:none;" disabled="disabled" @bind-value=task.Description></input>
                                                                 </td>
                                                      </tr>
                                                      <tr>
-                                                                <td><input type="date" id="@task.id-deadline" @bind-value=task.dateEnd style="border:none;" disabled="disabled"></td>
+                                                                <td><input type="date" id="@task.Id-deadline" @bind-value=task.DeadLine style="border:none;" disabled="disabled"></td>
                                                      </tr>
                                                         </table>
-                                                        <button class="edit-task-button" id="@task.id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
+                                                        <button class="edit-task-button" id="@task.Id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
                                                         <button class="delete-task-button" @onclick="@(e => DeleteButton(task,status))">❌</button>
                                                     </div>
                                                 </div>
@@ -583,7 +562,6 @@ body {
     function AddDiv(sid,newTask)
     {
         const parent = document.getElementById(sid + "-s");
-        
     }
 
         </script>

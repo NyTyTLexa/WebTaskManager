@@ -30,7 +30,6 @@ namespace WebApplication1.Controllers
             _configuration = configuration;
         }
 
-
         [HttpGet("GetStatus")]
         [SwaggerOperation("Status")]
         public async Task<IActionResult> Status()
@@ -47,9 +46,111 @@ namespace WebApplication1.Controllers
             return Unauthorized();
         }
 
-        private List<Model.Status> GetStatus()
+        [HttpPost("PostStatus")]
+        [SwaggerOperation("AddStatus")]
+        public async Task<IActionResult> AddStatus([FromQuery][Required] Model.Status status)
         {
-           return _appDbContext.Status.ToList();
+            if (ModelState.IsValid)
+            {
+                var query = PostStatus(status);
+                if (query)
+                { 
+                    return Ok();
+                }
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut("PutStatus")]
+        [SwaggerOperation("EditStatus")]
+        public async Task<IActionResult> EditStatus([FromQuery][Required] Model.Status status)
+        {
+            if (ModelState.IsValid)
+            {
+                var query = PutStatus(status);
+                if (query)
+                {
+                    return Ok();
+                }
+            }
+            return Unauthorized();
+        }
+
+        [HttpDelete("DeleteStatus")]
+        [SwaggerOperation("DeleteStatus")]
+        public async Task<IActionResult> DeleteStatus([FromQuery][Required] Model.Status status)
+        {
+            if (ModelState.IsValid)
+            {
+                var query = DelStatus(status);
+                if (query)
+                {
+                    return Ok();
+                }
+            }
+            return Unauthorized();
+        }
+
+        [HttpGet("GetUserTask")]
+        [SwaggerOperation("Task")]
+        public async Task<IActionResult> GetTaskUser([FromQuery][Required] string id)
+        {
+            if (ModelState.IsValid)
+            {
+                var tasks = GetTask(id);
+                if (tasks != null)
+                {
+                    var token = tasks;
+                    return Ok(new { token });
+                }
+            }
+            return Unauthorized();
+        }
+
+        [HttpPost("PostTask")]
+        [SwaggerOperation("AddTask")]
+        public async Task<IActionResult> AddTask([FromQuery][Required] Model.Task task, [FromQuery][Required] Model.User user)
+        {
+            if (ModelState.IsValid)
+            {
+                var tasks = PostUserTask(task, user);
+                if (tasks != null)
+                {
+                    var token = tasks;
+                    return Ok(new { token });
+                }
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut("PutTask")]
+        [SwaggerOperation("EditTask")]
+        public async Task<IActionResult> EditTask([FromQuery][Required] Model.Task task, [FromQuery][Required] Model.User user)
+        {
+            if (ModelState.IsValid)
+            {
+                var tasks = PutUserTask(task,user);
+                if (tasks)
+                {
+                    return Ok();
+                }
+            }
+            return Unauthorized();
+        }
+
+        [HttpDelete("DeleteTask")]
+        [SwaggerOperation("DeleteTask")]
+        public async Task<IActionResult> DeleteTask([FromQuery][Required] Model.Task task, [FromQuery][Required] Model.User user)
+        {
+            if (ModelState.IsValid)
+            {
+                var tasks = DelUserTask(task,user);
+                if (tasks)
+                {
+                    return Ok();
+                }
+            }
+            return Unauthorized();
         }
 
         [HttpGet("GetPriority")]
@@ -68,58 +169,182 @@ namespace WebApplication1.Controllers
             return Unauthorized();
         }
 
+        [HttpPost("PostPriority")]
+        [SwaggerOperation("AddPriority")]
+        public async Task<IActionResult> AddPriority([FromQuery][Required] Model.Priority priority)
+        {
+            if (ModelState.IsValid)
+            {
+                var tasks = PostPriority(priority);
+                if (tasks)
+                {
+                    return Ok();
+                }
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut("PutPriority")]
+        [SwaggerOperation("EditPriority")]
+        public async Task<IActionResult> EditPriority([FromQuery][Required] Model.Priority priority)
+        {
+            if (ModelState.IsValid)
+            {
+                var tasks = PutPriority(priority);
+                if (tasks)
+                {
+                    return Ok();
+                }
+            }
+            return Unauthorized();
+        }
+
+        [HttpDelete("DeletePriority")]
+        [SwaggerOperation("DeletePriority")]
+        public async Task<IActionResult> DeletePriority([FromQuery][Required] Model.Priority priority)
+        {
+            if (ModelState.IsValid)
+            {
+                var tasks = DelPriority(priority);
+                if (tasks)
+                {
+                    return Ok();
+                }
+            }
+            return Unauthorized();
+        }
+
+
+
+        [HttpPost("login")]
+        [SwaggerOperation("Login")]
+        public async Task<IActionResult> Login([FromBody] User model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await AuthenticateUser(model.Login, model.Password);
+                if (user != null)
+                {
+                    var token = GenerateJwtToken(user);
+                    return Ok(new { token });
+                }
+            }
+            return Unauthorized();
+        }
+
+        [HttpPost("register")]
+        [SwaggerOperation("reg")]
+        public async Task<IActionResult> Register([FromBody] User model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await CreateUser(model);
+                if (user != null)
+                {
+                    var token = GenerateJwtToken(user);
+                    return Ok(new { token });
+                }
+            }
+            return BadRequest();
+        }
+
+        private List<Model.Status> GetStatus()
+        {
+           return _appDbContext.Status.ToList();
+        }
+
+        private bool PostStatus(Model.Status status)
+        {
+            if (status != null)
+            {
+                status.id = _appDbContext.Status.Max(a => a.id) + 1;
+                _appDbContext.Status.Add(status!);
+                _appDbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool PutStatus(Model.Status status)
+        {
+            if (status != null)
+            {
+                _appDbContext.Status.Update(status!);
+                _appDbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool DelStatus(Model.Status status)
+        {
+
+            if (status != null)
+            {
+                _appDbContext.Status.Remove(status!);
+                _appDbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private List<Model.Priority> GetPriority()
         {
             return _appDbContext.Priority.ToList();
         }
 
-        [HttpGet("GetUserTask")]
-            [SwaggerOperation("Task")]
-            public async Task<IActionResult> GetTaskUser([FromQuery] [Required]string id)
+        private bool PostPriority(Model.Priority priority)
+        {
+            if (priority == null)
             {
-                if (ModelState.IsValid)
-                {
-                    var tasks = GetTask(id);
-                    if (tasks != null)
-                    {
-                        var token = tasks;
-                        return Ok(new { token });
-                    }
-                }
-                return Unauthorized();
+                priority.id = _appDbContext.Priority.Max(a => a.id) + 1;
+                _appDbContext.Priority.Add(priority);
+                _appDbContext.SaveChanges();
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
 
-        [HttpPost("login")]
-            [SwaggerOperation("Login")]
-            public async Task<IActionResult> Login([FromBody] User model)
+        private bool PutPriority(Model.Priority priority)
+        {
+            if (priority == null)
             {
-                if (ModelState.IsValid)
-                {
-                    var user = await AuthenticateUser(model.Login, model.Password);
-                    if (user != null)
-                    {
-                        var token = GenerateJwtToken(user);
-                        return Ok(new { token });
-                    }
-                }
-                return Unauthorized();
+                _appDbContext.Priority.Update(priority!);
+                _appDbContext.SaveChanges();
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
 
-            [HttpPost("register")]
-            [SwaggerOperation("reg")]
-            public async Task<IActionResult> Register([FromBody] User model)
+        private bool DelPriority(Model.Priority priority)
+        {
+            if (priority == null)
             {
-                if (ModelState.IsValid)
-                {
-                    var user = await CreateUser(model);
-                    if (user != null)
-                    {
-                        var token = GenerateJwtToken(user);
-                        return Ok(new { token });
-                    }
-                }
-                return BadRequest();
+                _appDbContext.Priority.Remove(priority!);
+                _appDbContext.SaveChanges();
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
+
         private DataContext _context;
         private  List<Model.Task> GetTask(string id)
         {
@@ -133,11 +358,68 @@ namespace WebApplication1.Controllers
                 var task = _appDbContext.Task.First(a => a.id == uatask.TaskId);
                 tasks.Add(task);
             }
-           
             return tasks;
         }
 
+        private bool PostUserTask(Model.Task task,Model.User user)
+        {
+          if(task == null)
+            {
+                var Tasks = new UserandTask();
+                Tasks.UserId = user.Id;
+                Tasks.TaskId = task.id;
+                Tasks.Id = _appDbContext.UserandTask.Max(a=>a.Id) + 1;
+                _appDbContext.Task.Add(task);
+                _appDbContext.SaveChanges();
+                _appDbContext.UserandTask.Add(Tasks);
+                _appDbContext.SaveChanges();
+                return true; 
+            }
+          else
+            {
+                return false;
+            }
+        }
 
+        private bool PutUserTask(Model.Task task, Model.User user)
+        {
+            if (task == null)
+            {
+                var Tasks = new UserandTask();
+                Tasks.UserId = user.Id;
+                Tasks.TaskId = task.id;
+                Tasks.Id = _appDbContext.UserandTask.First(a=>a.TaskId == task.id&&a.UserId == user.Id).Id;
+                _appDbContext.Task.Update(task);
+                _appDbContext.SaveChanges();
+                _appDbContext.UserandTask.Update(Tasks);
+                _appDbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool DelUserTask(Model.Task task, Model.User user)
+        {
+            if (task == null)
+            {
+                var Tasks = new UserandTask();
+                Tasks.UserId = user.Id;
+                Tasks.TaskId = task.id;
+                Tasks.Id = _appDbContext.UserandTask.First(a => a.TaskId == task.id && a.UserId == user.Id).Id;
+                _appDbContext.Task.Remove(task);
+                _appDbContext.SaveChanges();
+                _appDbContext.UserandTask.Remove(Tasks);
+                _appDbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         private async Task<Model.User> AuthenticateUser(string login, string password)
             { 

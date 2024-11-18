@@ -19,11 +19,15 @@ namespace Web.Model
         [JsonPropertyName("date_end")]
         public string DateEnd { get; set; } = string.Empty;
 
-        virtual public string DeadLine
+        virtual public DateTime DeadLine
         { 
             get
             {
-                return Convert.ToDateTime(date_end);
+                return Convert.ToDateTime(DateEnd);
+            }
+            set
+            {
+                DeadLine = value;
             }
         }
 
