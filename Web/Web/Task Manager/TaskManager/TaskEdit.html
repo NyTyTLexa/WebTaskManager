@@ -1,42 +1,63 @@
-    <div class="form">
-      <h2 class ="title">Работа с задачами</h2>
-      <div class="input-container ic1">
+<div class="form">
+    <h2 class="title">Работа с задачами</h2>
+    <div class="input-container ic1">
         <input id="firstname" class="input" type="text" placeholder=" " />
         <div class="cut"></div>
         <label for="ID" class="placeholder">ID</label>
-      </div>
-      <div class="input-container ic2">
+    </div>
+    <div class="input-container ic2">
         <input id="Name" class="input" type="text" placeholder="" />
         <div class="cut"></div>
         <label for="lastname" class="placeholder">Названия</label>
-      </div>
-      <div class="input-container ic2">
-              <div class="input-container ic1">
-        <input id="firstname" class="input" type="text" placeholder=" " />
-        <div class="cut"></div>
-        <label for="Description" class="placeholder">Описания</label>
-      </div>
-              <div class="input-container ic1">
-        <input id="firstname" class="input" type="text" placeholder=" " />
-        <div class="cut"></div>
-      </div>
-              <div class="input-container ic1">
-        <input id="firstname" class="input" type="text" placeholder=" " />
-        <div class="cut"></div>
-        <label for="firstname" class="placeholder">Статус</label>
-      </div>
-              <div class="input-container ic1">
-        <input id="firstname" class="input" type="text" placeholder=" " />
-        <div class="cut"></div>
-        <label for="firstname" class="placeholder">ID</label>
-      </div>
-              <div class="input-container ic1">
-        <input id="firstname" class="input" type="text" placeholder=" " />
-        <div class="cut"></div>
-        <label for="firstname" class="placeholder">ID</label>
-      </div>
-        <div class="FlexBox">
-          <button type="text" class="submit">Отмена</button>
-      <button type="text" class="submit">Подтвердить</button>
-        </div>
     </div>
+    <div class="input-container ic2">
+        <div class="input-container ic1">
+            <input id="firstname" class="input" type="text" placeholder=" " />
+            <div class="cut"></div>
+            <label for="Description" class="placeholder">Описания</label>
+        </div>
+        <div class="input-container ic1">
+            <div class="FlexBox">
+                <select name="city" style="color:#65657b; font-size:16px; width: 80%;" id="city-select" class="input">
+                    <option value="">Выберите приоритет</option>
+                    <option value="petersburg">Санкт-Петербург</option>
+                    <option value="samara">Самара</option>
+                    <option value="perm">Пермь</option>
+                    <option value="novosibirsk">Новосибирск</option>
+                </select>
+                <div class="button-container">
+                    <button class="add-button"><b>+</b></button>
+                    <button class="edit-button">✎</button>
+                </div>
+            </div>
+        </div>
+        <div class="input-container ic1">
+            <div class="input-container ic1">
+                <div class="FlexBox">
+                    <select name="city" style="color:#65657b; font-size:16px; width: 80%;" id="city-select" class="input">
+                        <option value="">Выберите статус</option>
+                        <option value="petersburg">Санкт-Петербург</option>
+                        <option value="samara">Самара</option>
+                        <option value="perm">Пермь</option>
+                        <option value="novosibirsk">Новосибирск</option>
+                    </select>
+                    <div class="button-container">
+                        <button class="add-button"><b>+</b></button>
+                        <button class="edit-button">✎</button>
+                    </div>
+                </div>
+                <div class="input-container ic1">
+                    <input id="firstname" class="input" type="text" placeholder=" " />
+                    <div class="cut"></div>
+                    <label for="firstname" class="placeholder">Дата начала</label>
+                </div>
+                <div class="input-container ic1">
+                    <input id="firstname" class="input" type="text" placeholder=" " />
+                    <div class="cut"></div>
+                    <label for="firstname" class="placeholder">Дата окончания</label>
+                </div>
+                <div class="FlexBox">
+                    <button type="text" class="cancel-button">Отмена</button>
+                    <button type="text" class="submit">Подтвердить</button>
+                </div>
+            </div>
