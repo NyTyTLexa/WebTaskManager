@@ -97,15 +97,19 @@
                                                     <div class="panel">
                                                     <table>
                                                     <tr>
-                                                      <td><input type="text" id="@task.Id-text" style="border:none;" @bind-value=@task.Name disabled="disabled"></input></td>
+                                                      <td>
+                                                      <input type="text" id="@task.Id-text" style="border:none;" @bind-value=@task.Name disabled="disabled"></input>
+                                                      </td>
                                                     </tr>
                                                      <tr>
-                                                                <td>
-                                                                <input id="@task.Id-description" style="border:none;" disabled="disabled" @bind-value=task.Description></input>
-                                                                </td>
+                                                    <td>
+                                                    <input id="@task.Id-description" style="border:none;" disabled="disabled" @bind-value=task.Description></input>
+                                                    </td>
                                                      </tr>
                                                      <tr>
-                                                                <td><input type="date" id="@task.Id-deadline" @bind-value=task.DeadLine style="border:none;" disabled="disabled"></td>
+                                                    <td>
+                                                    <input type="date" id="@task.Id-deadline" @bind-value=task.DeadLine style="border:none;" disabled="disabled">
+                                                    </td>
                                                      </tr>
                                                         </table>
                                                         <button class="edit-task-button" id="@task.Id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
