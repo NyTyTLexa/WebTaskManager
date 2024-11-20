@@ -3,36 +3,36 @@
 @using Web.Model;
 @rendermode RenderMode.InteractiveServer
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 @code
 {
     [Parameter]
     public string TokenUser { get; set; } = string.Empty;
-
     public bool FlagSort { get; set; }
     public DateTime parsedDate { get; set; }
     public List<Model.Task> Tasks { get; set; } = new List<Model.Task>();
     public string TaskStatus { get; set; } = string.Empty;
     public List<Model.Status> Statuses { get; set; } = new List<Model.Status>();
     public List<Model.Priority> Priorities { get; set; } = new List<Model.Priority>();
+    private ApiClient _apiClient { get; set; } = new ApiClient("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+        "eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoi" +
+        "MTIzMTIzIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFt" +
+        "ZWlkZW50aWZlZXIiOiIxMjNlNDU2Ny1lODliLTEyZDMtYTQ1Ni00MjY2NTU0NDAwMDA" +
+        "iLCJleHAiOjE3MzA5MDY3NDN9.ero6vopzxEbCz0XWeRIQ0eNOKL6q_CeKRMDApZeTAyc", "LANVER2024@");
 
     protected override async System.Threading.Tasks.Task OnInitializedAsync()
     {
-        var apiClient = new ApiClient("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
-       "eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoi" +
-       "MTIzMTIzIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFt" +
-       "ZWlkZW50aWZlZXIiOiIxMjNlNDU2Ny1lODliLTEyZDMtYTQ1Ni00MjY2NTU0NDAwMDA" +
-       "iLCJleHAiOjE3MzA5MDY3NDN9.ero6vopzxEbCz0XWeRIQ0eNOKL6q_CeKRMDApZeTAyc", "LANVER2024@");
-        var tasks = await apiClient.GetTaskAsync(new User()
-            {
-                Id = TokenUser,
-                Email = "string",
-                Login = "string",
-                Password = "string",
-                FullName = "string"
-            });
+        var tasks = await _apiClient.GetTaskAsync(new User()
+        {
+            Id = TokenUser,
+            Email = "string",
+            Login = "string",
+            Password = "string",
+            FullName = "string"
+        });
 
-        var statuses = await apiClient.GetStatusAsync();
-        var priorities = await apiClient.GetPrioritiesAsync();
+        var statuses = await _apiClient.GetStatusAsync();
+        var priorities = await _apiClient.GetPrioritiesAsync();
 
         Tasks = tasks;
         Statuses = statuses;
@@ -46,15 +46,22 @@
         JSRuntime.InvokeVoidAsync("AddDiv", status.Id,NewTask);
     }
 
-    public void EditButton(Model.Task task,Model.Status status)
+    public void EditButton(Model.Task task, Model.Status status)
     {
         // JSRuntime.InvokeVoidAsync("blockInputs", task.Id);
-        NavigationManager.NavigateTo($"/home/{result}", true);
+        NavigationManager.NavigateTo($"/home/{TokenUser}/{task.Id}", true);
     }
 
-    public void DeleteButton(Model.Task task,Model.Status status)
+    public async void DeleteButton(Model.Task task,Model.Status status)
     {
-        JSRuntime.InvokeVoidAsync("RemoveDiv", task.Id,status.Id);
+        await _apiClient.DeleteTask(task, new User{
+            Id = TokenUser,
+            Email = "string",
+            Login = "string",
+            Password = "string",
+            FullName = "string"
+        });
+       await JSRuntime.InvokeVoidAsync("RemoveDiv", task.Id,status.Id);
     }
 
     public void FilterButton()
@@ -94,35 +101,35 @@
                     {
                         @if (task.StatusId == status.Id)
                         {
-                                            <div class="task-area" id="@task.Id">
-                                                <div class="task" draggable="true">
-                                                    <div class="panel">
-                                                    <table>
-                                                    <tr>
-                                                      <td>
-                                                      <input type="text" id="@task.Id-text" style="border:none;" @bind-value=@task.Name disabled="disabled"></input>
-                                                      </td>
-                                                    </tr>
-                                                     <tr>
-                                                    <td>
-                                                    <input id="@task.Id-description" style="border:none;" disabled="disabled" @bind-value=task.Description></input>
-                                                    </td>
-                                                     </tr>
-                                                     <tr>
-                                                    <td>
-                                                    <input type="date" id="@task.Id-deadline" @bind-value=task.DeadLine style="border:none;" disabled="disabled">
-                                                    </td>
-                                                     </tr>
-                                                        </table>
-                                                        <button class="edit-task-button" id="@task.Id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
-                                                        <button class="delete-task-button" @onclick="@(e => DeleteButton(task,status))">❌</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                        }
-                    }
+                            <div class="task-area" id="@task.Id">
+                                <div class="task" draggable="true">
+                                    <div class="panel">
+                                    <table>
+                                    <tr>
+                                        <td>
+                                        <input type="text" id="@task.Id-text" style="border:none;" @bind-value=@task.Name disabled="disabled"></input>
+                                        </td>
+                                    </tr>
+                                        <tr>
+                                    <td>
+                                    <input id="@task.Id-description" style="border:none;" disabled="disabled" @bind-value=task.Description></input>
+                                    </td>
+                                        </tr>
+                                        <tr>
+                                    <td>
+                                    <input type="date" id="@task.Id-deadline" @bind-value=task.DeadLine style="border:none;" disabled="disabled">
+                                    </td>
+                                        </tr>
+                                        </table>
+                                        <button class="edit-task-button" id="@task.Id-bt-task" @onclick="@(e => EditButton(task,status))">📒</button>
+                                        <button class="delete-task-button" @onclick="@(e => DeleteButton(task,status))">❌</button>
+                                    </div>
                                 </div>
                             </div>
+                        }
+                    }
+                </div>
+            </div>
         }
     }
 }
