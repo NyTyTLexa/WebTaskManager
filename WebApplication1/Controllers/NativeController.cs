@@ -109,11 +109,11 @@ namespace WebApplication1.Controllers
 
         [HttpPost("PostTask")]
         [SwaggerOperation("AddTask")]
-        public async Task<IActionResult> AddTask([FromQuery][Required] Model.Task task, [FromQuery][Required] Model.User user)
+        public async Task<IActionResult> AddTask(UserandTask userandTask)
         {
             if (ModelState.IsValid)
             {
-                var tasks = PostUserTask(task, user);
+                var tasks = PostUserTask(userandTask);
                 if (tasks != null)
                 {
                     var token = tasks;
@@ -125,11 +125,11 @@ namespace WebApplication1.Controllers
 
         [HttpPut("PutTask")]
         [SwaggerOperation("EditTask")]
-        public async Task<IActionResult> EditTask([FromQuery][Required] Model.Task task, [FromQuery][Required] Model.User user)
+        public async Task<IActionResult> EditTask(UserandTask userandTask)
         {
             if (ModelState.IsValid)
             {
-                var tasks = PutUserTask(task,user);
+                var tasks = PutUserTask(userandTask);
                 if (tasks)
                 {
                     return Ok();
@@ -140,11 +140,11 @@ namespace WebApplication1.Controllers
 
         [HttpDelete("DeleteTask")]
         [SwaggerOperation("DeleteTask")]
-        public async Task<IActionResult> DeleteTask([FromQuery][Required] Model.Task task, [FromQuery][Required] Model.User user)
+        public async Task<IActionResult> DeleteTask(UserandTask userandTask)
         {
             if (ModelState.IsValid)
             {
-                var tasks = DelUserTask(task,user);
+                var tasks = DelUserTask(userandTask);
                 if (tasks)
                 {
                     return Ok();
@@ -361,8 +361,10 @@ namespace WebApplication1.Controllers
             return tasks;
         }
 
-        private bool PostUserTask(Model.Task task,Model.User user)
+        private bool PostUserTask(UserandTask userandTask)
         {
+          var task =  userandTask.Task;
+          var user = userandTask.User;
           if(task == null)
             {
                 var Tasks = new UserandTask();
@@ -381,8 +383,10 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private bool PutUserTask(Model.Task task, Model.User user)
+        private bool PutUserTask(Model.UserandTask userandTask)
         {
+            var task = userandTask.Task;
+            var user = userandTask.User;
             if (task == null)
             {
                 var Tasks = new UserandTask();
@@ -401,8 +405,10 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private bool DelUserTask(Model.Task task, Model.User user)
+        private bool DelUserTask(UserandTask userandTask)
         {
+            var task = userandTask.Task;
+            var user = userandTask.User;
             if (task == null)
             {
                 var Tasks = new UserandTask();

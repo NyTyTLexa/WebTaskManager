@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Text;
 using Web.Model;
 using Microsoft.AspNetCore.Identity.Data;
+using Web.Model;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class ApiClient
 {
@@ -115,5 +117,94 @@ public class ApiClient
         var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
         return new User { Login = login, Password = password, FullName = fullName, Email = email };
+    }
+
+    public async Task<Status> PostStatus(string name)
+    {
+        var Status = new Status
+        {
+            Id = 0,
+            Name = name
+        };
+
+        var content = new StringContent(JsonSerializer.Serialize(Status), Encoding.UTF8, "application/json");
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5000/api/Auth/PostStatus")
+        {
+            Content = content
+        };
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        return new Status();
+    }
+    public async Task<Priority> PostPriority(string name)
+    {
+        var priority = new Priority
+        {
+            Id = 0,
+            Name = name
+        };
+
+        var content = new StringContent(JsonSerializer.Serialize(priority), Encoding.UTF8, "application/json");
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5000/api/Auth/PostPriority")
+        {
+            Content = content
+        };
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        return new Priority();
+    }
+
+    public async Task<Web.Model.Task> PostTask(Web.Model.Task task, Web.Model.User user)
+    {
+        var userandTask = new UserAndTask()
+        {
+            Task = task,
+            User = user
+        };
+        var content = new StringContent(JsonSerializer.Serialize(userandTask), Encoding.UTF8, "application/json");
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5000/api/Auth/PostTask")
+        {
+            Content = content
+        };
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        return new Web.Model.Task();
+    }
+
+    public async Task<Web.Model.Task> PutTask(Web.Model.Task task, Web.Model.User user)
+    {
+        var userandTask = new UserAndTask()
+        {
+            Task = task,
+            User = user
+        };
+        var content = new StringContent(JsonSerializer.Serialize(userandTask), Encoding.UTF8, "application/json");
+        var request = new HttpRequestMessage(HttpMethod.Put, "http://localhost:5000/api/Auth/PutTask")
+        {
+            Content = content
+        };
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        return new Web.Model.Task();
+    }
+
+    public async Task<Web.Model.Task> DeleteTask(Web.Model.Task task,Web.Model.User user)
+    {
+        var userandTask = new UserAndTask()
+        {
+            Task = task,
+            User = user
+        };
+        var content = new StringContent(JsonSerializer.Serialize(userandTask), Encoding.UTF8, "application/json");
+        var request = new HttpRequestMessage(HttpMethod.Delete, "http://localhost:5000/api/Auth/DeleteTask")
+        {
+            Content = content
+        };
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        return new Web.Model.Task();
     }
 }

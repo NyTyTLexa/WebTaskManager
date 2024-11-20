@@ -1,31 +1,72 @@
-﻿@page "/page1"
-
+﻿@page "/home/{TokenUser}/Task/Status"
+@inject NavigationManager NavigationManager
+@rendermode RenderMode.InteractiveServer
+@inject IJSRuntime JSRuntime
 @code {
-
+    [Parameter]
+    public string TokenUser { get; set; } = string.Empty;
+    public Model.Status Status { get; set; } = new Model.Status();
+    public async void Accept()
+    {
+        var apiClient = new ApiClient("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+       "eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoi" +
+       "MTIzMTIzIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFt" +
+       "ZWlkZW50aWZlZXIiOiIxMjNlNDU2Ny1lODliLTEyZDMtYTQ1Ni00MjY2NTU0NDAwMDA" +
+       "iLCJleHAiOjE3MzA5MDY3NDN9.ero6vopzxEbCz0XWeRIQ0eNOKL6q_CeKRMDApZeTAyc", "LANVER2024@");
+        try
+        {
+            if (Status.Name != null)
+            {
+                await apiClient.PostStatus(Status.Name);
+                NavigationManager.NavigateTo($"/home/{TokenUser}/Task", true);
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("SelectError","Введите названия статуса");
+            }
+        }
+        catch(Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("SelectError", ex.Message);
+        }
+    }
+    public void Deny()
+    {
+        NavigationManager.NavigateTo($"/home/{TokenUser}/Task", true);
+    }
 }
 
 <html>
     <div class="form">
-        <h2 class ="title">Работа со статусами</h2>
+        <h2 class ="title" id="Title">Работа со статусами</h2>
         <div class="input-container ic1">
-            <input id="firstname" class="input" type="text" placeholder=" " />
             <div class="cut"></div>
             <label for="firstname" class="placeholder">ID</label>
         </div>
         <div class="input-container ic2">
-            <input id="lastname" class="input" type="text" placeholder=" " />
+            <input @bind-value="Status.Name" class="input" type="text" placeholder=" " />
             <div class="cut"></div>
-            <label for="lastname" class="placeholder">Названия</label>
+            <label for="NamePlaceholder" class="placeholder">Названия</label>
         </div>
         <div class="input-container ic2">
             <div class="FlexBox">
-            <button type="text" class="cancel-button">Отмена</button>
-                <button type="text" class="submit">Подтвердить</button>
+            <button type="text" class="cancel-button" @onclick="Deny">Отмена</button>
+                <button type="text" class="submit" @onclick="Accept">Подтвердить</button>
             </div>
         </div>
     </div>
 </html>
 
+<script>
+    function SelectError(error) {
+        const parent = document.getElementById("Title");
+        const originalText = parent.textContent; 
+        parent.textContent = error; 
+        setTimeout(() => {
+            parent.textContent = originalText; 
+        }, 3000); 
+    }
+</script>
 <style>
     body {
         align-items: center;
