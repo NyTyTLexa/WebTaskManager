@@ -1,13 +1,10 @@
-﻿using WebTaskManager.Model;
+﻿using DesktopTaskManager.Model;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Input;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Media;
-using DesktopTaskManager.Model;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
+using WebTaskManager.Model;
 
 namespace DesktopTaskManager
 {
@@ -22,11 +19,11 @@ namespace DesktopTaskManager
             "1lIjoiMTIzMTIzIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0" +
             "eS9jbGFpbXMvbmFtZWlkZW50aWZlZXIiOiIxMjNlNDU2Ny1lODliLTEyZDMtYTQ1Ni00MjY2NTU0ND" +
             "AwMDAiLCJleHAiOjE3MzA5MDY3NDN9.ero6vopzxEbCz0XWeRIQ0eNOKL6q_CeKRMDApZeTAyc", "LANVER2024@");
-        List<WebTaskManager.Model.Task> tasks = new List<WebTaskManager.Model.Task>();
-        List<Priority> priority = new List<Priority>();
-        List<Status> statuses = new List<Status>();
-        private List<StatusTask> statusTasks = new List<StatusTask>();
-        private ObservableCollection<Status> selectedStatuses = new ObservableCollection<Status>();
+        List<WebTaskManager.Model.Task> Tasks = new List<WebTaskManager.Model.Task>();
+        List<Priority> Priority = new List<Priority>();
+        List<Status> Statuses = new List<Status>();
+        private List<StatusTask> _statusTasks = new List<StatusTask>();
+        private ObservableCollection<Status> _selectedStatuses = new ObservableCollection<Status>();
         public TaskWindow(User user)
         {
             InitializeComponent();
@@ -81,20 +78,6 @@ namespace DesktopTaskManager
             }
         }
 
-        //void ClearStatusButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    var messageBoxResult = new MessageWindow("Подтверждение закрытия",
-        //        "Вы уверены, что хотите закрыть программу?", MessageBoxButton.YesNo, MessageBoxImage.Question);
-        //    messageBoxResult.ShowDialog();
-
-        //    if (messageBoxResult.DialogResult.Equals(true))
-        //    {
-        //        var mainWindow = new MainWindow();
-        //        mainWindow.Show();
-        //        this.Close();
-        //    }
-        //}
-
         private void ScrollTaskRowVisible_Click(object sender, RoutedEventArgs e)
         {
             ScrollTaskColumn.Visibility = Visibility.Hidden;
@@ -113,29 +96,23 @@ namespace DesktopTaskManager
 
         private async void GetDataApi()
         {
-            statuses = await _apiClient.GetStatusAsync();
-            priority = await _apiClient.GetPrioritiesAsync();
-            tasks = await _apiClient.GetTaskAsync(_userApi, statuses, priority);
+            Statuses = await _apiClient.GetStatusAsync();
+            Priority = await _apiClient.GetPrioritiesAsync();
+            Tasks = await _apiClient.GetTaskAsync(_userApi, Statuses, Priority);
 
-            StatusFilter.ItemsSource = statuses.Select(name=>name.Name).ToList();
+            StatusFilter.ItemsSource = Statuses.Select(name=>name.Name).ToList();
 
 
-            statusTasks = statuses.Select(s => new StatusTask
+            _statusTasks = Statuses.Select(s => new StatusTask
             {
                 Status = s,
-                Tasks = tasks.Where(t => t.StatusId == s.Id).ToList()
+                Tasks = Tasks.Where(t => t.StatusId == s.Id).ToList()
             }).ToList();
 
             UpdateLists();
 
-            TaskBord.ItemsSource = tasks.ToList();
-            StatusesControl.ItemsSource = statusTasks;
-        }
-
-        public class StatusTask
-        {
-            public Status Status { get; set; }
-            public List<WebTaskManager.Model.Task> Tasks { get; set; }
+            TaskBord.ItemsSource = Tasks.ToList();
+            StatusesControl.ItemsSource = _statusTasks;
         }
 
         private void StatusFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -167,22 +144,22 @@ namespace DesktopTaskManager
         private void UpdateLists()
         {
             int selectedStatusId;
-            var filteredTasks = tasks;
-            var filteredStatusTasks = statusTasks;
+            var filteredTasks = Tasks;
+            var filteredStatusTasks = _statusTasks;
             switch (StatusFilter.SelectedIndex)
             {
                 case 0:
                     {
-                        selectedStatusId = statuses.Find(x => x.Name == StatusFilter.SelectedItem.ToString())!.Id;
-                        filteredTasks = tasks.Where(x => x.StatusId == selectedStatusId).ToList();
-                        filteredStatusTasks = statusTasks.Where(st => st.Tasks.Any(t => t.StatusId == selectedStatusId)).ToList();
+                        selectedStatusId = Statuses.Find(x => x.Name == StatusFilter.SelectedItem.ToString())!.Id;
+                        filteredTasks = Tasks.Where(x => x.StatusId == selectedStatusId).ToList();
+                        filteredStatusTasks = _statusTasks.Where(st => st.Tasks.Any(t => t.StatusId == selectedStatusId)).ToList();
                         break;
                     }
                 case 1:
                     {
-                        selectedStatusId = statuses.Find(x => x.Name == StatusFilter.SelectedItem.ToString())!.Id;
-                        filteredTasks = tasks.Where(x => x.StatusId == selectedStatusId).ToList();
-                        filteredStatusTasks = statusTasks.Where(st => st.Tasks.Any(t => t.StatusId == selectedStatusId)).ToList();
+                        selectedStatusId = Statuses.Find(x => x.Name == StatusFilter.SelectedItem.ToString())!.Id;
+                        filteredTasks = Tasks.Where(x => x.StatusId == selectedStatusId).ToList();
+                        filteredStatusTasks = _statusTasks.Where(st => st.Tasks.Any(t => t.StatusId == selectedStatusId)).ToList();
                         break;
                     }
                 default:
@@ -193,8 +170,10 @@ namespace DesktopTaskManager
 
             if (StartData.SelectedDate.HasValue && EndData.SelectedDate.HasValue)
             {
-                filteredTasks = filteredTasks.Where(x => Convert.ToDateTime(x.DateStart) >= StartData.SelectedDate && Convert.ToDateTime(x.DateEnd) <= EndData.SelectedDate).ToList();
-                filteredStatusTasks = filteredStatusTasks.Where(st => st.Tasks.Any(t => Convert.ToDateTime(t.DateStart) >= StartData.SelectedDate && Convert.ToDateTime(t.DateEnd) <= EndData.SelectedDate)).ToList();
+                filteredTasks = filteredTasks.Where(x => Convert.ToDateTime(x.DateStart) >= 
+                StartData.SelectedDate && Convert.ToDateTime(x.DateEnd) <= EndData.SelectedDate).ToList();
+                filteredStatusTasks = filteredStatusTasks.Where(st => st.Tasks.Any(t => Convert.ToDateTime(t.DateStart) >= 
+                StartData.SelectedDate && Convert.ToDateTime(t.DateEnd) <= EndData.SelectedDate)).ToList();
             }
             else if (StartData.SelectedDate.HasValue)
             {
@@ -213,7 +192,7 @@ namespace DesktopTaskManager
             if (TaskBord.Items.Count == 0|| StatusesControl.Items.Count == 0)
             {
                 var messageWindow = new MessageWindow("Выборка данных"
-                    ,"По результату выборки данные отсутствуют", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ,"По результату выборки - данные отсутствуют", MessageBoxButton.OK, MessageBoxImage.Information);
                 messageWindow.ShowDialog();
             }
         }
@@ -257,19 +236,7 @@ namespace DesktopTaskManager
                     }
                 }
             }
-            return null;
-        }
-
-        private void UpdateTaskBord()
-        {
-            var filteredTasks = tasks.Where(t => selectedStatuses.Any(s => s.Id == t.StatusId)).ToList();
-            TaskBord.ItemsSource = filteredTasks;
-        }
-
-        private void UpdateStatusesControl()
-        {
-            var filteredStatusTasks = statusTasks.Where(st => st.Tasks.Any(t => selectedStatuses.Any(s => s.Id == t.StatusId))).ToList();
-            StatusesControl.ItemsSource = filteredStatusTasks;
+            return null!;
         }
 
         private void StartData_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
