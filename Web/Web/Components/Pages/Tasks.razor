@@ -24,32 +24,36 @@
         </div>
         <div class="input-container ic1">
             <div class="FlexBox">
-                <select name="city" style="color:#65657b; font-size:16px; width: 80%;" id="city-select" class="input">
-                    <option value="">Выберите приоритет</option>
-                    <option value="petersburg">Санкт-Петербург</option>
-                    <option value="samara">Самара</option>
-                    <option value="perm">Пермь</option>
-                    <option value="novosibirsk">Новосибирск</option>
-                </select>
+                <div class="input-container ic1" style="margin-top:0px">
+                    <select name="city" id="city-select" class="input" required>
+                        <option value="petersburg">Санкт-Петербург</option>
+                        <option value="samara">Самара</option>
+                        <option value="perm">Пермь</option>
+                        <option value="novosibirsk">Новосибирск</option>
+                    </select>
+                    <div class="cut"></div>
+                    <label for="firstname" class="placeholder">Выберите приоритет</label>
+                </div>
                 <div class="button-container">
                     <button class="add-button"><b>+</b></button>
-                    <button class="edit-button">✎</button>
                 </div>
             </div>
         </div>
         <div class="input-container ic1">
             <div class="input-container ic1">
                 <div class="FlexBox">
-                    <select name="city" style="color:#65657b; font-size:16px; width: 80%;" id="city-select" class="input">
-                        <option value="">Выберите статус</option>
-                        <option value="petersburg">Санкт-Петербург</option>
-                        <option value="samara">Самара</option>
-                        <option value="perm">Пермь</option>
-                        <option value="novosibirsk">Новосибирск</option>
-                    </select>
+                    <div class="input-container ic1" style="margin-top:0px">
+                        <select name="city" id="city-select" class="input" required>    
+                            <option value="petersburg">Санкт-Петербург</option>
+                            <option value="samara">Самара</option>
+                            <option value="perm">Пермь</option>
+                            <option value="novosibirsk">Новосибирск</option>
+                        </select>
+                        <div class="cut"></div>
+                        <label for="firstname" class="placeholder">Выберите статус</label>
+                    </div>
                     <div class="button-container">
                         <button class="add-button"><b>+</b></button>
-                        <button class="edit-button">✎</button>
                     </div>
                 </div>
                 <div class="input-container ic1">
@@ -91,7 +95,7 @@
     }
 
     .title {
-        color: Black;
+        color: black;
         font-family: sans-serif;
         font-size: 24px;
         font-weight: 600;
@@ -121,11 +125,11 @@
     }
 
     .input {
-        background-color: AliceBlue;
+        background-color: aliceblue;
         border-radius: 12px;
         border: 0;
         box-sizing: border-box;
-        color: #eee;
+        color: #65657b;
         font-size: 18px;
         height: 100%;
         outline: 0;
@@ -134,7 +138,7 @@
     }
 
     .cut {
-        background-color: White;
+        background-color: white;
         border-radius: 10px;
         height: 20px;
         left: 20px;
@@ -142,7 +146,7 @@
         top: -20px;
         transform: translateY(0);
         transition: transform 200ms;
-        width: 76px;
+        width: 110px;
     }
 
     .cut-short {
@@ -156,6 +160,7 @@
 
     .placeholder {
         color: #65657b;
+        background-color: transparent;
         font-family: sans-serif;
         left: 20px;
         line-height: 14px;
@@ -179,6 +184,35 @@
         color: #dc2f55;
     }
 
+    .select.input {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-color: aliceblue;
+        border-radius: 12px;
+        border: 0;
+        box-sizing: border-box;
+        color: #65657b;
+        font-size: 18px;
+        height: 100%;
+        outline: 0;
+        padding: 4px 20px 0;
+        width: 100%;
+    }
+
+    .select:valid ~ .cut {
+        transform: translateY(8px);
+    }
+
+    .select:valid ~ .placeholder {
+        transform: translateY(-30px) translateX(10px) scale(0.75);
+        color: #808097;
+    }
+
+    .select:focus ~ .placeholder {
+        color: #dc2f55;
+    }
+
     .submit, .cancel-button {
         background-color: #08d;
         border-radius: 12px;
@@ -190,7 +224,7 @@
         font-size: 18px;
         height: 50px;
         margin-top: 38px;
-        // outline: 0;
+        outline: 0;
         text-align: center;
         width: 100%;
     }
@@ -215,10 +249,10 @@
 
     .button-container {
         display: flex;
-        width: 20%;
+        width: 10%;
     }
 
-    .add-button, .edit-button {
+    .add-button {
         width: 100%;
         height: 30%;
         border: none;
@@ -226,16 +260,9 @@
         cursor: pointer;
         font-size: 16px;
         padding: 5%;
-    }
-
-    .add-button {
         background-color: #4CAF50;
         color: #fff;
-        font-size: 18.8px;
-    }
-
-    .edit-button {
-        background-color: #03A9F4;
-        color: #fff;
+        width: 30px;
+        height: 30px;
     }
 </style>
