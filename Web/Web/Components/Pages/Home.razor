@@ -7,6 +7,7 @@
 {
     [Parameter]
     public string TokenUser { get; set; } = string.Empty;
+
     public bool FlagSort { get; set; }
     public DateTime parsedDate { get; set; }
     public List<Model.Task> Tasks { get; set; } = new List<Model.Task>();
@@ -47,7 +48,8 @@
 
     public void EditButton(Model.Task task,Model.Status status)
     {
-        JSRuntime.InvokeVoidAsync("blockInputs", task.Id);
+        // JSRuntime.InvokeVoidAsync("blockInputs", task.Id);
+        NavigationManager.NavigateTo($"/home/{result}", true);
     }
 
     public void DeleteButton(Model.Task task,Model.Status status)

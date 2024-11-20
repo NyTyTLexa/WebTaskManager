@@ -1,10 +1,12 @@
-﻿@page "/home/{TokenUser}/Task/Status"
+﻿@page "/home/{TokenUser}/{Tokentask}/Status"
 @inject NavigationManager NavigationManager
 @rendermode RenderMode.InteractiveServer
 @inject IJSRuntime JSRuntime
 @code {
     [Parameter]
     public string TokenUser { get; set; } = string.Empty;
+    [Parameter]
+    public string TokenTask { get; set; } = string.Empty;
     public Model.Status Status { get; set; } = new Model.Status();
     public async void Accept()
     {

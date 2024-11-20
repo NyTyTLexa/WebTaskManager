@@ -1,6 +1,9 @@
-﻿@page "/page"
+﻿@page "/home/{TokenUser}/{TokenTask}"
 @code {
-    
+    [Parameter]
+    public string TokenUser { get; set; } = string.Empty;
+    [Parameter]
+    public Model.Task TokenTask { get; set; } = new Model.Task();
 }
 
 <html>
