@@ -1,11 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Text;
+using System.Text.Json;
 using Web.Model;
-using Microsoft.AspNetCore.Identity.Data;
-using Web.Model;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class ApiClient
 {
@@ -156,7 +153,7 @@ public class ApiClient
         return new Priority();
     }
 
-    public async Task<Web.Model.Task> PostTask(Web.Model.Task task, Web.Model.User user)
+    public async Task<Web.Model.Task> PostTask(Web.Model.Task task, User user)
     {
         var userandTask = new UserAndTask()
         {
@@ -174,7 +171,7 @@ public class ApiClient
         return new Web.Model.Task();
     }
 
-    public async Task<Web.Model.Task> PutTask(Web.Model.Task task, Web.Model.User user)
+    public async Task<Web.Model.Task> PutTask(Web.Model.Task task, User user)
     {
         var userandTask = new UserAndTask()
         {
@@ -191,7 +188,7 @@ public class ApiClient
         return new Web.Model.Task();
     }
 
-    public async Task<Web.Model.Task> DeleteTask(Web.Model.Task task,Web.Model.User user)
+    public async Task<Web.Model.Task> DeleteTask(Web.Model.Task task, User user)
     {
         var userandTask = new UserAndTask()
         {
