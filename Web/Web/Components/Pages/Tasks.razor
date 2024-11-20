@@ -1,44 +1,121 @@
 ﻿@page "/home/{TokenUser}/{TokenTask}"
+@inject NavigationManager NavigationManager
 @code {
     [Parameter]
     public string TokenUser { get; set; } = string.Empty;
     [Parameter]
-    public Model.Task TokenTask { get; set; } = new Model.Task();
+    public string TokenTask { get; set; } = string.Empty;
+    public Model.Task CurrentTask{get;set;} = new Model.Task();
+    public string CurrentPriority { get; set; } = "";
+    public string CurrentStatus { get; set; } = "";
+    public ApiClient ApiClients { get; set; } = new ApiClient("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+     "eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoi" +
+     "MTIzMTIzIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFt" +
+     "ZWlkZW50aWZlZXIiOiIxMjNlNDU2Ny1lODliLTEyZDMtYTQ1Ni00MjY2NTU0NDAwMDA" +
+     "iLCJleHAiOjE3MzA5MDY3NDN9.ero6vopzxEbCz0XWeRIQ0eNOKL6q_CeKRMDApZeTAyc", "LANVER2024@");
+    public List<Model.Status> Statuses { get; set; } = new List<Model.Status>();
+    public List<Model.Priority> Priority { get; set; } = new List<Model.Priority>();
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        var tasks = await ApiClients.GetTaskAsync(new Model.User()
+            {
+                Id = TokenUser,
+                Email = "string",
+                Login = "string",
+                Password = "string",
+                FullName = "string"
+            });
+        CurrentTask = tasks.First(a => a.Id == Convert.ToInt32(TokenTask));
+        Statuses = await ApiClients.GetStatusAsync();
+        Priority = await ApiClients.GetPrioritiesAsync();
+        
+        CurrentPriority = Priority.First(a => a.Id == CurrentTask.PriorityId).Name;
+        CurrentStatus = Statuses.First(a => a.Id == CurrentTask.StatusId).Name;
+    }
+    public async void SaveTask()
+    {
+        var user = new Model.User()
+            {
+                Id = TokenUser,
+                Email = "string",
+                Login = "string",
+                Password = "string",
+                FullName = "string"
+            };
+        if (CurrentTask.Id == 0)
+        {
+            
+            await ApiClients.PostTask(CurrentTask,user);
+        }
+        else
+        {
+            await ApiClients.PutTask(CurrentTask, user);
+        }
+    }
+    public void DenyTask()
+    {
+        NavigationManager.NavigateTo($"/home/{TokenUser}");
+    }
+    public void AddPriority()
+    {
+        NavigationManager.NavigateTo($"/home/{TokenUser}/{TokenTask}/Priority");
+    }
+    public void AddStatus()
+    {
+        NavigationManager.NavigateTo($"/home/{TokenUser}/{TokenTask}/Status");
+    }
 }
+@{
+    void RenderStatus(List<Model.Status> statuses)
+    {
+        @foreach(var status in statuses)
+        {
+            <option>@status</option>
+        }
+    }
+    void RenderPriority(List<Model.Priority> priorities)
+    {
+        @foreach (var priority in priorities)
+        {
+            <option>@priority</option>
+        }
+    }
+}
+
 
 <html>
     <div class="form">
     <h2 class="title">Работа с задачами</h2>
     <div class="input-container ic1">
-        <input id="firstname" class="input" type="text" placeholder=" " />
+        <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.Id" disabled="disabled" />
         <div class="cut"></div>
         <label for="ID" class="placeholder">ID</label>
     </div>
     <div class="input-container ic2">
-        <input id="Name" class="input" type="text" placeholder="" />
+        <input id="Name" class="input" type="text" placeholder="" @bind-value="CurrentTask.Name" />
         <div class="cut"></div>
         <label for="lastname" class="placeholder">Названия</label>
     </div>
     <div class="input-container ic2">
         <div class="input-container ic1">
-            <input id="firstname" class="input" type="text" placeholder=" " />
+            <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.Description" />
             <div class="cut"></div>
             <label for="Description" class="placeholder">Описания</label>
         </div>
         <div class="input-container ic1">
             <div class="FlexBox">
                 <div class="input-container ic1" style="margin-top:0px">
-                    <select name="city" id="city-select" class="input" required>
-                        <option value="petersburg">Санкт-Петербург</option>
-                        <option value="samara">Самара</option>
-                        <option value="perm">Пермь</option>
-                        <option value="novosibirsk">Новосибирск</option>
+                    <select name="city" id="city-select" class="input" required @bind="CurrentPriority">
+                        @if (Priority != null)
+                        {
+                            RenderPriority(Priority);
+                        }
                     </select>
                     <div class="cut"></div>
                     <label for="firstname" class="placeholder">Выберите приоритет</label>
                 </div>
                 <div class="button-container">
-                    <button class="add-button"><b>+</b></button>
+                    <button class="add-button" @onclick="AddPriority"><b>+</b></button>
                 </div>
             </div>
         </div>
@@ -46,32 +123,32 @@
             <div class="input-container ic1">
                 <div class="FlexBox">
                     <div class="input-container ic1" style="margin-top:0px">
-                        <select name="city" id="city-select" class="input" required>    
-                            <option value="petersburg">Санкт-Петербург</option>
-                            <option value="samara">Самара</option>
-                            <option value="perm">Пермь</option>
-                            <option value="novosibirsk">Новосибирск</option>
+                        <select name="city" id="city-select" class="input" required @bind="CurrentStatus">
+                            @if (Statuses != null)
+                            {
+                               RenderStatus(Statuses);
+                            }
                         </select>
                         <div class="cut"></div>
                         <label for="firstname" class="placeholder">Выберите статус</label>
                     </div>
                     <div class="button-container">
-                        <button class="add-button"><b>+</b></button>
+                        <button class="add-button" @onclick="AddStatus"><b>+</b></button>
                     </div>
                 </div>
                 <div class="input-container ic1">
-                    <input id="firstname" class="input" type="text" placeholder=" " />
+                    <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.DateStart" />
                     <div class="cut"></div>
                     <label for="firstname" class="placeholder">Дата начала</label>
                 </div>
                 <div class="input-container ic1">
-                    <input id="firstname" class="input" type="text" placeholder=" " />
+                    <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.DateEnd" />
                     <div class="cut"></div>
                     <label for="firstname" class="placeholder">Дата окончания</label>
                 </div>
                 <div class="FlexBox">
-                    <button type="text" class="cancel-button">Отмена</button>
-                    <button type="text" class="submit">Подтвердить</button>
+                    <button type="text" class="cancel-button" @onclick="SaveTask">Отмена</button>
+                    <button type="text" class="submit" @onclick="DenyTask">Подтвердить</button>
                 </div>
             </div>
         </div>
