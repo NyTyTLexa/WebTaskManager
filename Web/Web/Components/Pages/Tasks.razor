@@ -1,10 +1,12 @@
 ﻿@page "/home/{TokenUser}/{TokenTask}"
+@rendermode RenderMode.InteractiveServer
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @code {
-    [Parameter]
-    public string TokenUser { get; set; } = string.Empty;
-    [Parameter]
-    public string TokenTask { get; set; } = string.Empty;
+        [Parameter]
+        public string TokenUser { get; set; } = string.Empty;
+        [Parameter]
+        public string TokenTask { get; set; } = string.Empty;
     public Model.Task CurrentTask{get;set;} = new Model.Task();
     public string CurrentPriority { get; set; } = "";
     public string CurrentStatus { get; set; } = "";
@@ -26,34 +28,56 @@
                 FullName = "string"
             });
         CurrentTask = tasks.FirstOrDefault(a => a.Id == Convert.ToInt32(TokenTask));
-        if (CurrentTask == null)
-        {
-            CurrentTask.Id = tasks.Count + 1;
-        }
         Statuses = await ApiClients.GetStatusAsync();
         Priority = await ApiClients.GetPrioritiesAsync();
-        
-        CurrentPriority = Priority.First(a => a.Id == CurrentTask.PriorityId).Name;
-        CurrentStatus = Statuses.First(a => a.Id == CurrentTask.StatusId).Name;
-    }
-    public async void SaveTask()
-    {
-        var user = new Model.User()
-            {
-                Id = TokenUser,
-                Email = "string",
-                Login = "string",
-                Password = "string",
-                FullName = "string"
-            };
-        if (CurrentTask.Id == 0)
+        if (CurrentTask != null)
         {
-            
-            await ApiClients.PostTask(CurrentTask,user);
+            CurrentPriority = Priority.First(a => a.Id == CurrentTask.PriorityId).Name;
+            CurrentStatus = Statuses.First(a => a.Id == CurrentTask.StatusId).Name;
         }
         else
         {
-            await ApiClients.PutTask(CurrentTask, user);
+            CurrentPriority = Priority.First(a => a.Id == 1).Name;
+            CurrentStatus = Statuses.First(a => a.Id == 1).Name;
+            CurrentTask = new Model.Task()
+                {
+                    Id = 0,
+                    Name = " ",
+                    Description = " ",
+                    DateEnd = DateTime.Now.ToShortDateString(),
+                    DateStart = DateTime.Now.ToShortDateString(),
+                };
+        }
+    }
+    public async void SaveTask()
+    {
+        try
+        {
+            var user = new Model.User()
+                {
+                    Id = TokenUser,
+                    Email = "string",
+                    Login = "string",
+                    Password = "string",
+                    FullName = "string"
+                };
+            CurrentTask.StatusId = Statuses.First(a => a.Name == CurrentStatus).Id;
+            CurrentTask.PriorityId = Priority.First(a => a.Name == CurrentPriority).Id;
+            CurrentTask.DateStart = CurrentTask.StartDate.ToString();
+            CurrentTask.DateEnd = CurrentTask.DeadLine.ToString();
+            if (CurrentTask.Id == 0)
+            {
+                await ApiClients.PostTask(CurrentTask, user);
+            }
+            else
+            {
+                await ApiClients.PutTask(CurrentTask, user);
+            }
+            NavigationManager.NavigateTo($"/home/{TokenUser}");
+        }
+        catch(Exception ex)
+        {
+        await JSRuntime.InvokeVoidAsync("SelectError", ex.Message);
         }
     }
     public void DenyTask()
@@ -89,7 +113,7 @@
 
 <html>
     <div class="form">
-    <h2 class="title">Работа с задачами</h2>
+    <h2 class="title" id="title">Работа с задачами</h2>
     <div class="input-container ic1">
         <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.Id" disabled="disabled" />
         <div class="cut"></div>
@@ -141,18 +165,18 @@
                     </div>
                 </div>
                 <div class="input-container ic1">
-                    <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.StartDate" />
+                    <input id="firstname" class="input" type="date" placeholder=" " @bind="CurrentTask.StartDate" />
                     <div class="cut"></div>
                     <label for="firstname" class="placeholder">Дата начала</label>
                 </div>
                 <div class="input-container ic1">
-                    <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.DeadLine" />
+                    <input id="firstname" class="input" type="date" placeholder=" " @bind="CurrentTask.DeadLine" />
                     <div class="cut"></div>
                     <label for="firstname" class="placeholder">Дата окончания</label>
                 </div>
                 <div class="FlexBox">
-                    <button type="text" class="cancel-button" @onclick="SaveTask">Отмена</button>
-                    <button type="text" class="submit" @onclick="DenyTask">Подтвердить</button>
+                    <button type="text" class="cancel-button" @onclick="DenyTask">Отмена</button>
+                    <button type="text" class="submit" @onclick="SaveTask">Подтвердить</button>
                 </div>
             </div>
         </div>
@@ -160,6 +184,16 @@
 </div>
 </html>
 
+<script>
+    function SelectError(error) {
+        const parent = document.getElementById("title");
+        const originalText = parent.textContent;
+        parent.textContent = error;
+        setTimeout(() => {
+            parent.textContent = originalText;
+        }, 3000);
+    }
+</script>
 <style>
     body {
         align-items: center;

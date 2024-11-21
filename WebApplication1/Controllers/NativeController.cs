@@ -348,7 +348,7 @@ namespace WebApplication1.Controllers
         private DataContext _context;
         private  List<Model.Task> GetTask(string id)
         {
-            var userAndTasks = _appDbContext.UserandTask.Where(a=>a.UserId==id).ToList();
+            var userAndTasks = _appDbContext.UserandTask.Where(a=>a.Userid==id).ToList();
             var tasks = new List<Model.Task>();
             var task123 = _appDbContext.Task.ToList();
             var status = _appDbContext.Status.ToList();
@@ -363,14 +363,15 @@ namespace WebApplication1.Controllers
 
         private bool PostUserTask(UserandTask userandTask)
         {
-          var task =  userandTask.Task;
-          var user = userandTask.User;
-          if(task == null)
+          var task =  userandTask.task;
+          var user = userandTask.user;
+          if(task != null)
             {
+                task.id = _appDbContext.Task.Max(a => a.id) + 1;
                 var Tasks = new UserandTask();
-                Tasks.UserId = user.Id;
+                Tasks.Userid = user.Id;
                 Tasks.TaskId = task.id;
-                Tasks.Id = _appDbContext.UserandTask.Max(a=>a.Id) + 1;
+                Tasks.id = _appDbContext.UserandTask.Max(a=>a.id) + 1;
                 _appDbContext.Task.Add(task);
                 _appDbContext.SaveChanges();
                 _appDbContext.UserandTask.Add(Tasks);
@@ -385,17 +386,15 @@ namespace WebApplication1.Controllers
 
         private bool PutUserTask(Model.UserandTask userandTask)
         {
-            var task = userandTask.Task;
-            var user = userandTask.User;
-            if (task == null)
+            var task = userandTask.task;
+            var user = userandTask.user;
+            if (task != null)
             {
                 var Tasks = new UserandTask();
-                Tasks.UserId = user.Id;
+                Tasks.Userid = user.Id;
                 Tasks.TaskId = task.id;
-                Tasks.Id = _appDbContext.UserandTask.First(a=>a.TaskId == task.id&&a.UserId == user.Id).Id;
+                Tasks.id = _appDbContext.UserandTask.First(a=>a.TaskId == task.id&&a.Userid == user.Id).id;
                 _appDbContext.Task.Update(task);
-                _appDbContext.SaveChanges();
-                _appDbContext.UserandTask.Update(Tasks);
                 _appDbContext.SaveChanges();
                 return true;
             }
@@ -407,15 +406,15 @@ namespace WebApplication1.Controllers
 
         private bool DelUserTask(UserandTask userandTask)
         {
-            var task = userandTask.Task;
-            var user = userandTask.User;
+            var task = _appDbContext.Task.First(a=>a.id==userandTask.TaskId);
+            var user = _appDbContext.USER.First(a=>a.Id == userandTask.Userid);
             if (task != null)
             {
                 var Tasks = new UserandTask();
-                Tasks.UserId = user.Id;
+                Tasks.Userid = user.Id;
                 Tasks.TaskId = task.id;
-                Tasks.Id = _appDbContext.UserandTask.First(a => a.TaskId == task.id && a.UserId == user.Id).Id;
-                _appDbContext.UserandTask.Remove(Tasks);
+                Tasks.id = _appDbContext.UserandTask.First(a => a.TaskId == task.id && a.Userid == user.Id).id;
+                _appDbContext.Task.Remove(task);
                 _appDbContext.SaveChanges();
                 return true;
             }

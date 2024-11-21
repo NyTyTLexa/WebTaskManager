@@ -20,7 +20,7 @@
             if (Status.Name != null)
             {
                 await apiClient.PostStatus(Status.Name);
-                NavigationManager.NavigateTo($"/home/{TokenUser}/Task", true);
+                NavigationManager.NavigateTo($"/home/{TokenUser}/{TokenTask}", true);
             }
             else
             {
@@ -31,10 +31,11 @@
         {
             await JSRuntime.InvokeVoidAsync("SelectError", ex.Message);
         }
+
     }
     public void Deny()
     {
-        NavigationManager.NavigateTo($"/home/{TokenUser}/Task", true);
+        NavigationManager.NavigateTo($"/home/{TokenUser}/{TokenTask}", true);
     }
 }
 

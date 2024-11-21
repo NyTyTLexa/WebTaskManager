@@ -25,7 +25,7 @@ namespace Web.Model
             }
             set
             {
-                DeadLine = value;
+                DateStart = value.ToString("yyyy-MM-dd");
             }
         } 
 
@@ -40,7 +40,7 @@ namespace Web.Model
             }
             set
             {
-                DeadLine = value;
+                DateEnd = value.ToString("yyyy-MM-dd");
             }
         } 
 

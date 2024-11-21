@@ -132,7 +132,7 @@ public class ApiClient
         };
         var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
-        return new Status();
+        return Status;
     }
     public async Task<Priority> PostPriority(string name)
     {
@@ -150,7 +150,7 @@ public class ApiClient
         };
         var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
-        return new Priority();
+        return priority;
     }
 
     public async Task<Web.Model.Task> PostTask(Web.Model.Task task, User user)
@@ -192,6 +192,8 @@ public class ApiClient
     {
         var userandTask = new UserAndTask()
         {
+            TaskId = task.Id,
+            UserId = user.Id,
             Task = task,
             User = user
         };
@@ -201,7 +203,6 @@ public class ApiClient
             Content = content
         };
         var response = await _httpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
         return new Web.Model.Task();
     }
 }

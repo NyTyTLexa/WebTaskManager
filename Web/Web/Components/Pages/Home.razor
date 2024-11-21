@@ -42,7 +42,7 @@
 
     public void AddButton(Model.Status status)
     {
-        var NewTask = new Model.Task() { Id = Tasks.Count + 1 };
+        var NewTask = new Model.Task() { Id = 0 };
         JSRuntime.InvokeVoidAsync("AddDiv", status.Id,NewTask);
         NavigationManager.NavigateTo($"/home/{TokenUser}/{NewTask.Id}", true);
     }

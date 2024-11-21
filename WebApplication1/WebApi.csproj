@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <None Update="DBTaskManager.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
