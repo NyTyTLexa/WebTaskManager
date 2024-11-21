@@ -409,14 +409,12 @@ namespace WebApplication1.Controllers
         {
             var task = userandTask.Task;
             var user = userandTask.User;
-            if (task == null)
+            if (task != null)
             {
                 var Tasks = new UserandTask();
                 Tasks.UserId = user.Id;
                 Tasks.TaskId = task.id;
                 Tasks.Id = _appDbContext.UserandTask.First(a => a.TaskId == task.id && a.UserId == user.Id).Id;
-                _appDbContext.Task.Remove(task);
-                _appDbContext.SaveChanges();
                 _appDbContext.UserandTask.Remove(Tasks);
                 _appDbContext.SaveChanges();
                 return true;

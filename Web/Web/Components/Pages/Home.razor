@@ -44,6 +44,7 @@
     {
         var NewTask = new Model.Task() { Id = Tasks.Count + 1 };
         JSRuntime.InvokeVoidAsync("AddDiv", status.Id,NewTask);
+        NavigationManager.NavigateTo($"/home/{TokenUser}/{NewTask.Id}", true);
     }
 
     public void EditButton(Model.Task task, Model.Status status)

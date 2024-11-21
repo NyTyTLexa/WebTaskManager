@@ -25,7 +25,11 @@
                 Password = "string",
                 FullName = "string"
             });
-        CurrentTask = tasks.First(a => a.Id == Convert.ToInt32(TokenTask));
+        CurrentTask = tasks.FirstOrDefault(a => a.Id == Convert.ToInt32(TokenTask));
+        if (CurrentTask == null)
+        {
+            CurrentTask.Id = tasks.Count + 1;
+        }
         Statuses = await ApiClients.GetStatusAsync();
         Priority = await ApiClients.GetPrioritiesAsync();
         
@@ -70,14 +74,14 @@
     {
         @foreach(var status in statuses)
         {
-            <option>@status</option>
+            <option>@status.Name</option>
         }
     }
     void RenderPriority(List<Model.Priority> priorities)
     {
         @foreach (var priority in priorities)
         {
-            <option>@priority</option>
+            <option>@priority.Name</option>
         }
     }
 }
@@ -137,12 +141,12 @@
                     </div>
                 </div>
                 <div class="input-container ic1">
-                    <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.DateStart" />
+                    <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.StartDate" />
                     <div class="cut"></div>
                     <label for="firstname" class="placeholder">Дата начала</label>
                 </div>
                 <div class="input-container ic1">
-                    <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.DateEnd" />
+                    <input id="firstname" class="input" type="text" placeholder=" " @bind-value="CurrentTask.DeadLine" />
                     <div class="cut"></div>
                     <label for="firstname" class="placeholder">Дата окончания</label>
                 </div>

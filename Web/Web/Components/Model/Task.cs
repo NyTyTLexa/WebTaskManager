@@ -15,9 +15,22 @@ namespace Web.Model
         [JsonPropertyName("status_id")]
         public int StatusId { get; set; }
         [JsonPropertyName("date_start")]
-        public string DateStart { get; set; } = string.Empty;
+        public string DateStart { get; set; } = DateTime.Now.ToShortDateString();
+
+        public DateTime StartDate
+        {
+            get
+            {
+                return Convert.ToDateTime(DateStart);
+            }
+            set
+            {
+                DeadLine = value;
+            }
+        } 
+
         [JsonPropertyName("date_end")]
-        public string DateEnd { get; set; } = string.Empty;
+        public string DateEnd { get; set; } = DateTime.Now.ToShortDateString();
 
         virtual public DateTime DeadLine
         { 
@@ -29,7 +42,7 @@ namespace Web.Model
             {
                 DeadLine = value;
             }
-        }
+        } 
 
     }
 }
