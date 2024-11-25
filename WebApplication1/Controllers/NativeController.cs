@@ -1,21 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using WebApplication1.Model;
 
 namespace WebApplication1.Controllers
 {
-        
-        [ApiController]
+
+    [ApiController]
         [Route("api/[controller]")]
         public class AuthController : ControllerBase
         {
@@ -24,9 +19,9 @@ namespace WebApplication1.Controllers
 
         private DataContext _appDbContext;
 
-        public AuthController(DataContext AppDbContext, IConfiguration configuration)
+        public AuthController(DataContext appDbContext, IConfiguration configuration)
         {
-            _appDbContext = AppDbContext;
+            _appDbContext = appDbContext;
             _configuration = configuration;
         }
 
@@ -48,7 +43,7 @@ namespace WebApplication1.Controllers
 
         [HttpPost("PostStatus")]
         [SwaggerOperation("AddStatus")]
-        public async Task<IActionResult> AddStatus([FromQuery][Required] Model.Status status)
+        public async Task<IActionResult> AddStatus([FromQuery][Required] Status status)
         {
             if (ModelState.IsValid)
             {
@@ -63,7 +58,7 @@ namespace WebApplication1.Controllers
 
         [HttpPut("PutStatus")]
         [SwaggerOperation("EditStatus")]
-        public async Task<IActionResult> EditStatus([FromQuery][Required] Model.Status status)
+        public async Task<IActionResult> EditStatus([FromQuery][Required] Status status)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +73,7 @@ namespace WebApplication1.Controllers
 
         [HttpDelete("DeleteStatus")]
         [SwaggerOperation("DeleteStatus")]
-        public async Task<IActionResult> DeleteStatus([FromQuery][Required] Model.Status status)
+        public async Task<IActionResult> DeleteStatus([FromQuery][Required] Status status)
         {
             if (ModelState.IsValid)
             {
@@ -109,11 +104,11 @@ namespace WebApplication1.Controllers
 
         [HttpPost("PostTask")]
         [SwaggerOperation("AddTask")]
-        public async Task<IActionResult> AddTask(UserandTask userandTask)
+        public async Task<IActionResult> AddTask(UserandTask userAndTask)
         {
             if (ModelState.IsValid)
             {
-                var tasks = PostUserTask(userandTask);
+                var tasks = PostUserTask(userAndTask);
                 if (tasks != null)
                 {
                     var token = tasks;
@@ -125,11 +120,11 @@ namespace WebApplication1.Controllers
 
         [HttpPut("PutTask")]
         [SwaggerOperation("EditTask")]
-        public async Task<IActionResult> EditTask(UserandTask userandTask)
+        public async Task<IActionResult> EditTask(UserandTask userAndTask)
         {
             if (ModelState.IsValid)
             {
-                var tasks = PutUserTask(userandTask);
+                var tasks = PutUserTask(userAndTask);
                 if (tasks)
                 {
                     return Ok();
@@ -140,11 +135,11 @@ namespace WebApplication1.Controllers
 
         [HttpDelete("DeleteTask")]
         [SwaggerOperation("DeleteTask")]
-        public async Task<IActionResult> DeleteTask(UserandTask userandTask)
+        public async Task<IActionResult> DeleteTask(UserandTask userAndTask)
         {
             if (ModelState.IsValid)
             {
-                var tasks = DelUserTask(userandTask);
+                var tasks = DelUserTask(userAndTask);
                 if (tasks)
                 {
                     return Ok();
@@ -171,7 +166,7 @@ namespace WebApplication1.Controllers
 
         [HttpPost("PostPriority")]
         [SwaggerOperation("AddPriority")]
-        public async Task<IActionResult> AddPriority([FromQuery][Required] Model.Priority priority)
+        public async Task<IActionResult> AddPriority([FromQuery][Required] Priority priority)
         {
             if (ModelState.IsValid)
             {
@@ -186,7 +181,7 @@ namespace WebApplication1.Controllers
 
         [HttpPut("PutPriority")]
         [SwaggerOperation("EditPriority")]
-        public async Task<IActionResult> EditPriority([FromQuery][Required] Model.Priority priority)
+        public async Task<IActionResult> EditPriority([FromQuery][Required] Priority priority)
         {
             if (ModelState.IsValid)
             {
@@ -201,7 +196,7 @@ namespace WebApplication1.Controllers
 
         [HttpDelete("DeletePriority")]
         [SwaggerOperation("DeletePriority")]
-        public async Task<IActionResult> DeletePriority([FromQuery][Required] Model.Priority priority)
+        public async Task<IActionResult> DeletePriority([FromQuery][Required] Priority priority)
         {
             if (ModelState.IsValid)
             {
@@ -218,11 +213,11 @@ namespace WebApplication1.Controllers
 
         [HttpPost("login")]
         [SwaggerOperation("Login")]
-        public async Task<IActionResult> Login([FromBody] User model)
+        public async Task<IActionResult> Login([FromBody] User users)
         {
             if (ModelState.IsValid)
             {
-                var user = await AuthenticateUser(model.Login, model.Password);
+                var user = await AuthenticateUser(users.Login, users.Password);
                 if (user != null)
                 {
                     var token = GenerateJwtToken(user);
@@ -234,11 +229,11 @@ namespace WebApplication1.Controllers
 
         [HttpPost("register")]
         [SwaggerOperation("reg")]
-        public async Task<IActionResult> Register([FromBody] User model)
+        public async Task<IActionResult> Register([FromBody] User users)
         {
             if (ModelState.IsValid)
             {
-                var user = await CreateUser(model);
+                var user = await CreateUser(users);
                 if (user != null)
                 {
                     var token = GenerateJwtToken(user);
@@ -248,12 +243,12 @@ namespace WebApplication1.Controllers
             return BadRequest();
         }
 
-        private List<Model.Status> GetStatus()
+        private List<Status> GetStatus()
         {
            return _appDbContext.Status.ToList();
         }
 
-        private bool PostStatus(Model.Status status)
+        private bool PostStatus(Status status)
         {
             if (status != null)
             {
@@ -268,7 +263,7 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private bool PutStatus(Model.Status status)
+        private bool PutStatus(Status status)
         {
             if (status != null)
             {
@@ -282,7 +277,7 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private bool DelStatus(Model.Status status)
+        private bool DelStatus(Status status)
         {
 
             if (status != null)
@@ -297,16 +292,16 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private List<Model.Priority> GetPriority()
+        private List<Priority> GetPriority()
         {
             return _appDbContext.Priority.ToList();
         }
 
-        private bool PostPriority(Model.Priority priority)
+        private bool PostPriority(Priority priority)
         {
             if (priority == null)
             {
-                priority.id = _appDbContext.Priority.Max(a => a.id) + 1;
+                priority!.id = _appDbContext.Priority.Max(a => a.id) + 1;
                 _appDbContext.Priority.Add(priority);
                 _appDbContext.SaveChanges();
                 return true;
@@ -317,7 +312,7 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private bool PutPriority(Model.Priority priority)
+        private bool PutPriority(Priority priority)
         {
             if (priority == null)
             {
@@ -331,7 +326,7 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private bool DelPriority(Model.Priority priority)
+        private bool DelPriority(Priority priority)
         {
             if (priority == null)
             {
@@ -345,9 +340,8 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private DataContext _context;
         private  List<Model.Task> GetTask(string id)
-        {
+{
             var userAndTasks = _appDbContext.UserandTask.Where(a=>a.Userid==id).ToList();
             var tasks = new List<Model.Task>();
             var task123 = _appDbContext.Task.ToList();
@@ -361,20 +355,20 @@ namespace WebApplication1.Controllers
             return tasks;
         }
 
-        private bool PostUserTask(UserandTask userandTask)
+        private bool PostUserTask(UserandTask userAndTask)
         {
-          var task =  userandTask.task;
-          var user = userandTask.user;
+          var task =  userAndTask.task;
+          var user = userAndTask.user;
           if(task != null)
             {
                 task.id = _appDbContext.Task.Max(a => a.id) + 1;
-                var Tasks = new UserandTask();
-                Tasks.Userid = user.Id;
-                Tasks.TaskId = task.id;
-                Tasks.id = _appDbContext.UserandTask.Max(a=>a.id) + 1;
+                var tasks = new UserandTask();
+                tasks.Userid = user.Id;
+                tasks.TaskId = task.id;
+                tasks.id = _appDbContext.UserandTask.Max(a=>a.id) + 1;
                 _appDbContext.Task.Add(task);
                 _appDbContext.SaveChanges();
-                _appDbContext.UserandTask.Add(Tasks);
+                _appDbContext.UserandTask.Add(tasks);
                 _appDbContext.SaveChanges();
                 return true; 
             }
@@ -384,16 +378,12 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private bool PutUserTask(Model.UserandTask userandTask)
+        private bool PutUserTask(UserandTask userAndTask)
         {
-            var task = userandTask.task;
-            var user = userandTask.user;
+            var task = userAndTask.task;
+            var user = userAndTask.user;
             if (task != null)
             {
-                var Tasks = new UserandTask();
-                Tasks.Userid = user.Id;
-                Tasks.TaskId = task.id;
-                Tasks.id = _appDbContext.UserandTask.First(a=>a.TaskId == task.id&&a.Userid == user.Id).id;
                 _appDbContext.Task.Update(task);
                 _appDbContext.SaveChanges();
                 return true;
@@ -406,14 +396,10 @@ namespace WebApplication1.Controllers
 
         private bool DelUserTask(UserandTask userandTask)
         {
-            var task = _appDbContext.Task.First(a=>a.id==userandTask.TaskId);
+            var task = _appDbContext.Task.First(a=>a.id == userandTask.TaskId);
             var user = _appDbContext.USER.First(a=>a.Id == userandTask.Userid);
             if (task != null)
             {
-                var Tasks = new UserandTask();
-                Tasks.Userid = user.Id;
-                Tasks.TaskId = task.id;
-                Tasks.id = _appDbContext.UserandTask.First(a => a.TaskId == task.id && a.Userid == user.Id).id;
                 _appDbContext.Task.Remove(task);
                 _appDbContext.SaveChanges();
                 return true;
@@ -424,14 +410,14 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private async Task<Model.User> AuthenticateUser(string login, string password)
+        private async Task<User> AuthenticateUser(string login, string password)
             { 
-            var user = _appDbContext.USER.FirstOrDefault(a=>a.Login == login&&a.Password==password);
+            var user = _appDbContext.USER.FirstOrDefault(a=> a.Login == login && a.Password == password);
             if (user != null)
             {
                 return user;
             }
-                return null;
+                return null!;
             }
 
             private async Task<User> CreateUser(User user)
@@ -439,7 +425,7 @@ namespace WebApplication1.Controllers
             var users = _appDbContext.USER.ToList();
                 if (users.Any(a=>a.Login==user.Login))
                 {
-                    return null;
+                    return null!;
                 }
                 else
                 {
