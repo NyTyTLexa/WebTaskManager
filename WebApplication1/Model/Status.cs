@@ -1,8 +1,13 @@
-﻿namespace WebApplication1.Model
+﻿using System.Text.Json.Serialization;
+
+namespace WebApplication1.Model
 {
     public class Status
     {
-        public int id { get; set; }
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("name")]
         public string Name { get; set; }
     }
 }

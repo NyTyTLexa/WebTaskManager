@@ -11,8 +11,8 @@ namespace WebApplication1.Controllers
         public DbSet<Model.Priority> Priority { get; set; }
         public DbSet<Model.Status> Status { get; set; }
         public DbSet<Model.Task> Task { get; set; }
-        public DbSet<Model.User> USER { get; set; }
-        public DbSet<Model.UserandTask> UserandTask { get; set; }
+        public DbSet<Model.Users> USER { get; set; }
+        public DbSet<Model.UserAndTask> UserandTask { get; set; }
         protected readonly IConfiguration Configuration;
 
         public DataContext(IConfiguration configuration)
